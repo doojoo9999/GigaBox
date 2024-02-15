@@ -14,9 +14,6 @@ class Post(
     @Column(name = "content")
     var content: String,
 
-    @Column(name = "img_url")
-    var imageUrl: String,
-
     @Column(name = "is_deleted")
     var isDeleted: Boolean = false
 
@@ -35,7 +32,6 @@ fun Post.toResponse(): PostResponse {
         id = id!!,
         title = title,
         content = content,
-        imageUrl = imageUrl,
         createdAt = this.createdAt,
         updatedAt = this.updatedAt
     )
