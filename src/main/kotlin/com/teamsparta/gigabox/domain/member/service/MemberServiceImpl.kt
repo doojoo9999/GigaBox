@@ -1,9 +1,13 @@
 package com.teamsparta.gigabox.domain.member.service
 
+import com.teamsparta.gigabox.domain.member.dto.request.SendMailRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SignUpRequest
+import com.teamsparta.gigabox.domain.member.model.MailEntity
 import com.teamsparta.gigabox.domain.member.model.MemberEntity
 import com.teamsparta.gigabox.domain.member.model.UserRole
+import com.teamsparta.gigabox.domain.member.repository.MailRepository
 import com.teamsparta.gigabox.domain.member.repository.MemberRepository
+import com.teamsparta.gigabox.infra.utility.mailutility.MailUtility
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -11,6 +15,8 @@ import org.springframework.stereotype.Service
 class MemberServiceImpl(
     private val memberRepository : MemberRepository,
     private val passwordEncoder : PasswordEncoder,
+    private val mailUtility : MailUtility,
+    private val mailRepository: MailRepository,
 ) : MemberService {
     override fun signUp(request: SignUpRequest) {
 
@@ -22,5 +28,16 @@ class MemberServiceImpl(
             role = UserRole.PRE_MEMBER
         ))
 
+    }
+
+    override fun sendMail(request: SendMailRequest) {
+        val randomString = mailUtility.sendMail(request.email)
+
+        mailRepository.save(
+            MailEntity(
+                email = request.email,
+                authCode = randomString
+            )
+        )
     }
 }

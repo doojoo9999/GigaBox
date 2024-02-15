@@ -1,5 +1,6 @@
 package com.teamsparta.gigabox.domain.member.controller
 
+import com.teamsparta.gigabox.domain.member.dto.request.SendMailRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SignUpRequest
 import com.teamsparta.gigabox.domain.member.service.MemberService
 import org.springframework.http.HttpStatus
@@ -23,5 +24,17 @@ class MemberController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .build()
+    }
+
+    @PostMapping("/sendmail")
+    fun sendMail(
+        @RequestBody request : SendMailRequest
+    ) : ResponseEntity<Unit> {
+        memberService.sendMail(request)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .build()
+
     }
 }
