@@ -21,7 +21,7 @@ class MemberEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    val role : UserRole
+    var role : UserRole
 
 ) {
     @Id

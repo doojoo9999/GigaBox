@@ -1,13 +1,16 @@
 package com.teamsparta.gigabox.domain.member.controller
 
+import com.teamsparta.gigabox.domain.member.dto.request.EmailAuthRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SendMailRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SignUpRequest
 import com.teamsparta.gigabox.domain.member.service.MemberService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -39,4 +42,17 @@ class MemberController(
             .build()
 
     }
+
+    @PatchMapping("/emailAuth")
+    fun emailAuth(
+        @RequestParam ("authCode") authCode : String
+    ) : ResponseEntity<Unit> {
+
+        memberService.emailAuth(authCode)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .build()
+    }
+
 }

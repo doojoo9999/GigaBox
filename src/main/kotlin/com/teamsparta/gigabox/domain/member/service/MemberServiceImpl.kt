@@ -1,5 +1,6 @@
 package com.teamsparta.gigabox.domain.member.service
 
+import com.teamsparta.gigabox.domain.member.dto.request.EmailAuthRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SendMailRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SignUpRequest
 import com.teamsparta.gigabox.domain.member.model.MailEntity
@@ -8,8 +9,10 @@ import com.teamsparta.gigabox.domain.member.model.UserRole
 import com.teamsparta.gigabox.domain.member.repository.MailRepository
 import com.teamsparta.gigabox.domain.member.repository.MemberRepository
 import com.teamsparta.gigabox.infra.utility.mailutility.MailUtility
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberServiceImpl(
@@ -39,5 +42,15 @@ class MemberServiceImpl(
                 authCode = randomString
             )
         )
+    }
+
+    @Transactional
+    override fun emailAuth(authCode : String) {
+        val authCodeCheck = mailRepository.findByAuthCode(authCode)
+        val userCheck = memberRepository.findByEmail(authCodeCheck.email)
+
+        userCheck.role = UserRole.MEMBER
+
+        memberRepository.save(userCheck)
     }
 }
