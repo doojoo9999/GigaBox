@@ -12,6 +12,7 @@ import com.teamsparta.gigabox.domain.post.repository.PostRepository
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 @Service
 class PostServiceImpl(
     private val postRepository: PostRepository,
@@ -27,6 +28,7 @@ class PostServiceImpl(
         return post.toResponse()
     }
 
+    @Transactional
     override fun createPost(formData: PostRequest): PostResponse {
 
         if (formData.imgUrl != null) {
@@ -58,6 +60,8 @@ class PostServiceImpl(
             return post.toResponse()
         }
     }
+
+    @Transactional
     override fun updatePost(postId: Long, request: UpdatePostRequest): PostResponse {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
         post.title = request.title ?: post.title
@@ -65,6 +69,8 @@ class PostServiceImpl(
 
         return post.toResponse()
     }
+
+    @Transactional
     override fun deletePost(postId: Long) {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
         post.deletePost()
