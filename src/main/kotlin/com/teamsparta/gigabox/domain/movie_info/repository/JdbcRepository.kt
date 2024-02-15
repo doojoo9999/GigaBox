@@ -29,4 +29,20 @@ class JdbcRepository(
             }
         })
     }
+
+    fun updateKeywordCount(
+        titles: List<String>
+    ){
+        val sql = "UPDATE keyword SET count = count+1 WHERE word IN (?)"
+
+        jdbcTemplate.batchUpdate(sql, object : BatchPreparedStatementSetter{
+            override fun setValues(ps: PreparedStatement, i: Int) {
+                ps.setString(1, titles[i])
+            }
+
+            override fun getBatchSize(): Int {
+                return titles.size
+            }
+        })
+    }
 }

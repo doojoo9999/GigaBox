@@ -39,27 +39,26 @@ class MovieInfoServiceImpl(
                 jdbcRepository.insertTitles(KeywordEntity.toEntities(titles))
             }
             keywordEntityList.size != titles.size -> {
-
-                //먼저 기존에 저장되어 있는 키워드 카운트 증가
-                movieInfoRepository.incrementCountOfAllKeyword()
                 
                 //DB에 저장되어 있는 제목을 가져옴
                 val savedTitles = keywordEntityList.map { it.word }
+
+                //이미 저장되어 있는 애들은 카운트를 1 늘려줌
+                jdbcRepository.updateKeywordCount(savedTitles)
 
                 //저장 안 된 제목을 얻어냄
                 val notSavedTitles = titles.filterNot {
                     savedTitles.contains(it)
                 }.toTypedArray()
 
+                //저장 안 된 제목을 저장함
                 jdbcRepository.insertTitles(KeywordEntity.toEntities(notSavedTitles))
             }
             else -> {
 //                keywordEntityList.map {
 //                    it.apply { increaseCount() }
 //                }
-
-                movieInfoRepository.incrementCountOfAllKeyword()
-
+                jdbcRepository.updateKeywordCount(titles.toList())
             }
         }
 
