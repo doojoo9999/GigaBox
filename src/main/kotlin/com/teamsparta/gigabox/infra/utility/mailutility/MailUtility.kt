@@ -25,7 +25,7 @@ class MailUtility (
         helper.setTo(email)
         helper.setSubject("GigaBox 이메일 인증")
         helper.setText("<h1>[이메일 인증]</h1><br>" +
-                "http://localhost:8080/emailAuth?authCode=$randomString")
+                "a href = http://localhost:8080/api/v1/member/emailAuth?authCode=$randomString")
         helper.setFrom("doojoo0536@gmail.com")
         javaMailSender.send(message)
 
