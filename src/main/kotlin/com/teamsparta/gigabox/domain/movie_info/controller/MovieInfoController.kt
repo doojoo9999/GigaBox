@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Movie Info", description = "영화 정보 API")
-@RequestMapping("/api")
+@RequestMapping("/api/v1/movie-info")
 @RestController
 class MovieInfoController(
     private val movieInfoService: MovieInfoService
 ) {
     @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색한다.")
-    @GetMapping("/v1/movie-info/search")
-    fun searchMovie(
+    @GetMapping("/search")
+    fun searchByKeyword(
         @Valid
         @NotBlank
         @Size(min = 1, max = 15, message = "1자 이상 15자 이하여야 합니다.")
@@ -36,17 +35,16 @@ class MovieInfoController(
         @PageableDefault(
             page = 0,
             size = 10,
-            sort = ["title"],
-            direction = Sort.Direction.DESC
+            sort = ["title"]
         ) pageable: Pageable
     ):ResponseEntity<Page<SearchResponse>>{
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(movieInfoService.searchByMovieName(keyword, pageable))
+            .body(movieInfoService.searchByKeyword(keyword, pageable))
     }
 
     @Operation(summary = "인기 검색어 목록 조회", description = "가장 많이 검색한 영화 제목을 알려준다.")
-    @GetMapping("/v1")
+    @GetMapping("/top-search")
     fun getTopSearched(): ResponseEntity<List<KeywordResponse>>{
         return ResponseEntity
             .status(HttpStatus.OK)

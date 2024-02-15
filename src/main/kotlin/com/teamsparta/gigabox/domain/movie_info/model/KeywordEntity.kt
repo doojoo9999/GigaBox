@@ -19,16 +19,29 @@ class KeywordEntity private constructor(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    fun increaseCount(){
-        count++
-    }
+//    fun increaseCount(){
+//        count++
+//    }
 
     companion object{
-        fun toEntity(keyword: String): KeywordEntity{
+        
+        //엔티티 하나를 만드는 메서드
+        fun toEntity(
+            keyword: String
+        ): KeywordEntity{
             return KeywordEntity(
                 word = keyword,
                 count = 1
             )
+        }
+
+        //여러 개의 엔티티를 만드는 메서드
+        fun toEntities(
+            titles: Array<String>
+        ): List<KeywordEntity>{
+            return titles.map {
+                toEntity(it)
+            }
         }
     }
 }

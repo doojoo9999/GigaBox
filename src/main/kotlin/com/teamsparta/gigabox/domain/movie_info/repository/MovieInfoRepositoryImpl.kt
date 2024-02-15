@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.EntityPathBase
 import com.querydsl.core.types.dsl.PathBuilder
 import com.teamsparta.gigabox.domain.movie_info.dto.response.KeywordResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
+import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.model.QKeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.model.QMovieInfoEntity
 import com.teamsparta.gigabox.infra.querydsl.QueryDslSupport
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Repository
 class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
     private val movieInfo = QMovieInfoEntity.movieInfoEntity
     private val keywordEntity = QKeywordEntity.keywordEntity
-    override fun searchByMovieName(keyword: String, pageable: Pageable): Page<SearchResponse> {
+    override fun searchByKeyword(keyword: String, pageable: Pageable): Page<SearchResponse> {
         val whereClause = BooleanBuilder()
         whereClause.and(movieInfo.title.contains(keyword))
 
@@ -71,6 +72,15 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
             .from(keywordEntity)
             .orderBy(keywordEntity.count.desc(), keywordEntity.updatedAt.desc())
             .limit(10)
+            .fetch()
+    }
+
+    override fun findByTitles(
+        titles: Array<String>
+    ): List<KeywordEntity> {
+        return queryFactory
+            .selectFrom(keywordEntity)
+            .where(keywordEntity.word.`in`(*titles))
             .fetch()
     }
 }

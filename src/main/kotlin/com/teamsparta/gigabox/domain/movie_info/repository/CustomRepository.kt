@@ -7,7 +7,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CustomRepository {
-    fun searchByMovieName(keyword: String, pageable: Pageable): Page<SearchResponse>
+    fun searchByKeyword(keyword: String, pageable: Pageable): Page<SearchResponse>
 
     fun getTopSearched(): List<KeywordResponse>
+
+    fun findByTitles(titles: Array<String>): List<KeywordEntity>
 }

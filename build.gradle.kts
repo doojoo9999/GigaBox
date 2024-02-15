@@ -69,7 +69,6 @@ dependencies {
     //storage
     implementation("io.github.jan-tennert.supabase:storage-kt:2.1.2")
     implementation("io.ktor:ktor-client-cio:2.3.7")
-
 }
 
 tasks.withType<KotlinCompile> {
