@@ -1,6 +1,7 @@
 package com.teamsparta.gigabox.domain.post.service
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
+import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.post.model.Post
@@ -11,7 +12,6 @@ import com.teamsparta.gigabox.domain.post.repository.PostRepository
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 @Service
 class PostServiceImpl(
     private val postRepository: PostRepository,
@@ -58,15 +58,13 @@ class PostServiceImpl(
             return post.toResponse()
         }
     }
-
-    override fun updatePost(postId: Long, request: PostRequest, imgUrl: List<MultipartFile>?): PostResponse {
+    override fun updatePost(postId: Long, request: UpdatePostRequest): PostResponse {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
         post.title = request.title ?: post.title
         post.content = request.content ?: post.content
 
         return post.toResponse()
     }
-
     override fun deletePost(postId: Long) {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
         post.deletePost()

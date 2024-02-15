@@ -1,6 +1,7 @@
 package com.teamsparta.gigabox.domain.post.controller
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
+import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.service.PostService
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 @RequestMapping("/api/v1")
 @RestController
@@ -38,10 +38,9 @@ class PostController(
     @PatchMapping("/posts/{postId}")
     fun updatePost(
         @PathVariable postId: Long,
-        @RequestPart imgUrl: List<MultipartFile>?,
-        @RequestBody request: PostRequest
+        @RequestBody request: UpdatePostRequest
     ): ResponseEntity<PostResponse> {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.updatePost(postId, request, imgUrl))
+        return ResponseEntity.status(HttpStatus.OK).body(postService.updatePost(postId, request))
     }
 
     @DeleteMapping("/posts/{postId}")
