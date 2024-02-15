@@ -24,6 +24,10 @@ class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+
+    fun deletePost() {
+        isDeleted = true
+    }
 }
 
 fun Post.toResponse(): PostResponse {
