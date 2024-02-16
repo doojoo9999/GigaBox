@@ -1,5 +1,6 @@
 package com.teamsparta.gigabox.domain.movie_info.controller
 
+import com.teamsparta.gigabox.domain.movie_info.dto.request.CreateMovieInfoRequest
 import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import com.teamsparta.gigabox.domain.movie_info.service.MovieInfoService
@@ -13,10 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Tag(name = "Movie Info", description = "영화 정보 API")
 @RequestMapping("/api/v1/movie-info")
@@ -24,6 +22,17 @@ import org.springframework.web.bind.annotation.RestController
 class MovieInfoController(
     private val movieInfoService: MovieInfoService
 ) {
+    fun createMovieInfo(
+        @RequestBody request: CreateMovieInfoRequest
+    ): ResponseEntity<Unit> {
+
+        movieInfoService.createMovieInfo(request)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .build()
+    }
+
     @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색한다.")
     @GetMapping("/search")
     fun searchByKeyword(
@@ -37,7 +46,7 @@ class MovieInfoController(
             size = 10,
             sort = ["title"]
         ) pageable: Pageable
-    ):ResponseEntity<Page<SearchResponse>>{
+    ): ResponseEntity<Page<SearchResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(movieInfoService.searchByKeyword(keyword, pageable))
