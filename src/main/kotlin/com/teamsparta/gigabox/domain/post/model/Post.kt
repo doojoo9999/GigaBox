@@ -1,11 +1,12 @@
 package com.teamsparta.gigabox.domain.post.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLRestriction
 
 @Entity
-@SQLRestriction("is_deleted = false")
+@SQLRestriction("deleted = false")
 @Table(name = "post")
 class Post(
     @Column(name = "title")
@@ -14,16 +15,23 @@ class Post(
     @Column(name = "content")
     var content: String,
 
-    @Column(name = "is_deleted")
-    var isDeleted: Boolean = false
+    @Column(name = "deleted")
+    var deleted: Boolean = false,
 
-) : BaseTime() {
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    var storage: MutableList<Storage> = mutableListOf(),
+
+    ) : BaseTime() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
     fun deletePost() {
-        isDeleted = true
+        deleted = true
+    }
+    fun initImgUrl(uploadData: MutableList<Storage>) {
+        storage = uploadData
     }
 }
 
@@ -32,6 +40,7 @@ fun Post.toResponse(): PostResponse {
         id = id!!,
         title = title,
         content = content,
+        imgUrlList = storage.map { it.toResponse() },
         createdAt = this.createdAt,
         updatedAt = this.updatedAt
     )
