@@ -7,4 +7,6 @@ interface MemberRepository : JpaRepository <MemberEntity, Long>{
 
     fun findByEmail (email:String) : MemberEntity
 
+    fun findByAccount(account: String): MemberEntity?
+
 }
