@@ -48,6 +48,6 @@ class PostController(
         @PathVariable postId: Long,
     ): ResponseEntity<Unit> {
         postService.deletePost(postId)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(postService.deletePost(postId))
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }
