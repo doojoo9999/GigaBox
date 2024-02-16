@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*
 class MovieInfoController(
     private val movieInfoService: MovieInfoService
 ) {
+    @Operation(summary = "영화 등록", description = "영화를 등록합니다.")
+    @PostMapping
     fun createMovieInfo(
         @RequestBody request: CreateMovieInfoRequest
     ): ResponseEntity<Unit> {

@@ -19,9 +19,9 @@ class KeywordEntity private constructor(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-//    fun increaseCount(){
-//        count++
-//    }
+    fun increaseCount(){
+        count++
+    }
 
     companion object{
         
