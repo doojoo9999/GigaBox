@@ -1,0 +1,36 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
+  security:
+    user:
+      password: 1
+  data:
+    redis:
+      host: ${redis.host}
+      port: ${redis.port}
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+
+logging:
+  level:
+    org:
+
+      hibernate:
+        sql: debug
+        orm:
+          jdbc:
+            bind: trace
+
+      springframework:
+        security: debug
+        jdbc:
+          core:
+            JdbcTemplate: debug
+
+server:
+  port: 8080
