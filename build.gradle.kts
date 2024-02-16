@@ -71,6 +71,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:2.3.7")
     //aws
     implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    implementation ("javax.xml.bind:jaxb-api:2.3.0")
 
 }
 

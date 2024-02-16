@@ -49,4 +49,8 @@ class AwsS3Service(
 
         return fileNameList
     }
+
+    fun deleteImage(fileName: String?) {
+        amazonS3Client.deleteObject(DeleteObjectRequest(bucket, fileName))
+    }
 }

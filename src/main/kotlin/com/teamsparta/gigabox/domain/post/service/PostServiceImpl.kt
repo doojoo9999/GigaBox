@@ -10,9 +10,12 @@ import com.teamsparta.gigabox.domain.post.model.toResponse
 import com.teamsparta.gigabox.domain.post.repository.StorageRepository
 import com.teamsparta.gigabox.domain.post.repository.PostRepository
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
+import java.time.LocalDateTime
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
 @Service
 class PostServiceImpl(
     private val postRepository: PostRepository,
@@ -30,36 +33,31 @@ class PostServiceImpl(
 
     @Transactional
     override fun createPost(formData: PostRequest): PostResponse {
-
-        if (formData.imgUrl != null) {
-            val post = postRepository.save(
-                Post(
-                    title = formData.title!!,
-                    content = formData.content!!
-                )
+        val post = postRepository.save(
+            Post(
+                title = formData.title!!,
+                content = formData.content!!
             )
-            val uploadData = awsS3Service.uploadImage(formData.imgUrl)
+        )
 
-            uploadData.forEach { url ->
-                storageRepository.save(
-                    Storage(
-                        post = post,
-                        imageUrl = url
+        val list: MutableList<Storage> = mutableListOf()
+        formData.imgUrl?.let {
+            val uploadData = awsS3Service.uploadImage(it).map { url ->
+                list.add(
+                    storageRepository.save(
+                        Storage(
+                            post = post,
+                            imageUrl = url
+                        )
                     )
                 )
             }
-            return post.toResponse()
-
-        } else {
-            val post = postRepository.save(
-                Post(
-                    title = formData.title!!,
-                    content = formData.content!!
-                )
-            )
-            return post.toResponse()
+            post.initImgUrl(list)
         }
+
+        return post.toResponse()
     }
+
 
     @Transactional
     override fun updatePost(postId: Long, request: UpdatePostRequest): PostResponse {
@@ -73,7 +71,28 @@ class PostServiceImpl(
     @Transactional
     override fun deletePost(postId: Long) {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
+        val storageList = storageRepository.findByPostId(postId)
+        for (storage in storageList) {
+            storage.deleteImg()
+        }
         post.deletePost()
+
         postRepository.save(post)
+//        awsS3Service.deleteImage(storageList[0].imageUrl)
     }
+
+
+    @Scheduled(cron = "0 0 12 * * ?")
+    @Transactional
+    fun deleteData() {
+        val dataBefore90days = LocalDateTime.now()
+        storageRepository.deleteStorageByCreatedAtLessThanAndDeleted(dataBefore90days, true)
+    }
+
+//    @Transactional
+//    @Scheduled(cron = "0 59 19 * * ?")
+//    fun deletePostData() {
+//        val dataPostBefore90days = LocalDateTime.now()
+//        postRepository.deletePostByCreatedAtLessThanAndDeleted(dataPostBefore90days,true)
+//    }
 }
