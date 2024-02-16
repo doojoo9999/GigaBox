@@ -78,21 +78,18 @@ class PostServiceImpl(
         post.deletePost()
 
         postRepository.save(post)
-//        awsS3Service.deleteImage(storageList[0].imageUrl)
+
+        storageList.forEach {
+            awsS3Service.deleteImage(it.imageUrl)
+        }
     }
 
 
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 58 01 * * ?")
     @Transactional
     fun deleteData() {
         val dataBefore90days = LocalDateTime.now()
         storageRepository.deleteStorageByCreatedAtLessThanAndDeleted(dataBefore90days, true)
+        postRepository.deletePostByCreatedAtLessThanEqualAndDeleted(dataBefore90days, true)
     }
-
-//    @Transactional
-//    @Scheduled(cron = "0 59 19 * * ?")
-//    fun deletePostData() {
-//        val dataPostBefore90days = LocalDateTime.now()
-//        postRepository.deletePostByCreatedAtLessThanAndDeleted(dataPostBefore90days,true)
-//    }
 }

@@ -51,6 +51,8 @@ class AwsS3Service(
     }
 
     fun deleteImage(fileName: String?) {
-        amazonS3Client.deleteObject(DeleteObjectRequest(bucket, fileName))
+        val list = "$fileName"
+        val replacedList = list.replace("https://gigaboxbucket.s3.ap-northeast-2.amazonaws.com/", "")
+        amazonS3Client.deleteObject(DeleteObjectRequest(bucket, replacedList))
     }
 }

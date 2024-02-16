@@ -3,10 +3,9 @@ package com.teamsparta.gigabox.domain.post.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import jakarta.persistence.*
-import org.hibernate.annotations.SQLRestriction
 
 @Entity
-@SQLRestriction("deleted = false")
+//@SQLRestriction("deleted = false")
 @Table(name = "post")
 class Post(
     @Column(name = "title")
