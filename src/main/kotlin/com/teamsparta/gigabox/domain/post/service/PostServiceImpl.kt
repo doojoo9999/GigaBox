@@ -10,6 +10,8 @@ import com.teamsparta.gigabox.domain.post.model.toResponse
 import com.teamsparta.gigabox.domain.post.repository.StorageRepository
 import com.teamsparta.gigabox.domain.post.repository.PostRepository
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
@@ -22,8 +24,8 @@ class PostServiceImpl(
     private val storageRepository: StorageRepository,
     private val awsS3Service: AwsS3Service
 ) : PostService {
-    override fun getListPost(): List<PostResponse> {
-        return postRepository.findAll().map { it.toResponse() }
+    override fun getListPost(pageable: Pageable): Page<PostResponse> {
+        return postRepository.findAll(pageable).map { it.toResponse() }
     }
 
     override fun getPost(postId: Long): PostResponse {
@@ -85,7 +87,7 @@ class PostServiceImpl(
     }
 
 
-    @Scheduled(cron = "0 58 01 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
     @Transactional
     fun deleteData() {
         val dataBefore90days = LocalDateTime.now()
