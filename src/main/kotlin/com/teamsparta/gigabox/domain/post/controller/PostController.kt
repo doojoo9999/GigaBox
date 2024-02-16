@@ -5,6 +5,10 @@ import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.service.PostService
 import com.teamsparta.gigabox.infra.aws.AwsS3Service
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -17,8 +21,10 @@ class PostController(
     private val awsS3Service: AwsS3Service
 ) {
     @GetMapping("/posts")
-    fun getListPost(): ResponseEntity<List<PostResponse>> {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getListPost())
+    fun getListPost(
+        @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
+    ): ResponseEntity<Page<PostResponse>> {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getListPost(pageable))
     }
 
     @GetMapping("/posts/{postId}")
