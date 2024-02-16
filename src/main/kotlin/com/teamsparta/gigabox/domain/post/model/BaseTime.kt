@@ -1,4 +1,4 @@
-package com.teamsparta.gigabox.common.model
+package com.teamsparta.gigabox.domain.post.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
@@ -7,21 +7,17 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseTime {
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    var createdAt: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH-mm"))
+    var createdAt: LocalDateTime = LocalDateTime.now()
         protected set
 
     @LastModifiedDate
     @Column(nullable = false)
-    var updatedAt: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH-mm"))
+    var updatedAt: LocalDateTime = LocalDateTime.now()
         protected set
-
 }
