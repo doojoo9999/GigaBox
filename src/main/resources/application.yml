@@ -35,7 +35,6 @@ springdoc:
 logging:
   level:
     org:
-
       hibernate:
         sql: debug
         orm:
