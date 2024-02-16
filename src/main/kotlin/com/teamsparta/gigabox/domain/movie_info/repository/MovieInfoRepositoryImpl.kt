@@ -7,7 +7,7 @@ import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.EntityPathBase
 import com.querydsl.core.types.dsl.PathBuilder
-import com.teamsparta.gigabox.domain.movie_info.dto.response.KeywordResponse
+import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.model.QKeywordEntity
@@ -60,11 +60,11 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
         }.toTypedArray()
     }
 
-    override fun getTopSearched(): List<KeywordResponse>{
+    override fun getTopSearched(): List<TopSearchResponse>{
         return queryFactory
             .select(
                 Projections.constructor(
-                    KeywordResponse::class.java,
+                    TopSearchResponse::class.java,
                     keywordEntity.word,
                     keywordEntity.count
                 )

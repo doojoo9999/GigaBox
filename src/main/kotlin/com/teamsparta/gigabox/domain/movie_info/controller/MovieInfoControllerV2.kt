@@ -1,8 +1,6 @@
 package com.teamsparta.gigabox.domain.movie_info.controller
 
-import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
-import com.teamsparta.gigabox.domain.movie_info.service.MovieInfoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -18,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "Movie Info", description = "영화 정보 API")
-@RequestMapping("/api/v1/movie-info")
+
+@Tag(name = "Movie Info V2", description = "영화 정보 API V2")
+@RequestMapping("/api/v2/movie-info")
 @RestController
-class MovieInfoController(
-    private val movieInfoService: MovieInfoService
-) {
-    @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색한다.")
+class MovieInfoControllerV2 {
+    @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색해서 In-memory Cache에 저장하기")
     @GetMapping("/search")
     fun searchByKeyword(
         @Valid
@@ -37,17 +34,7 @@ class MovieInfoController(
             size = 10,
             sort = ["title"]
         ) pageable: Pageable
-    ):ResponseEntity<Page<SearchResponse>>{
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(movieInfoService.searchByKeyword(keyword, pageable))
-    }
+    ){
 
-    @Operation(summary = "인기 검색어 목록 조회", description = "가장 많이 검색한 영화 제목을 알려준다.")
-    @GetMapping("/top-search")
-    fun getTopSearched(): ResponseEntity<List<TopSearchResponse>>{
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(movieInfoService.getTopSearched())
     }
 }

@@ -69,6 +69,9 @@ dependencies {
     //storage
     implementation("io.github.jan-tennert.supabase:storage-kt:2.1.2")
     implementation("io.ktor:ktor-client-cio:2.3.7")
+
+    //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 tasks.withType<KotlinCompile> {

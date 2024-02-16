@@ -9,4 +9,6 @@ interface MovieInfoRepository: JpaRepository<MovieInfoEntity, Long>, CustomRepos
 //    @Modifying(clearAutomatically = true)
 //    @Query("UPDATE KeywordEntity k SET k.count = k.count+1")
 //    fun incrementCountOfAllKeyword()
+
+
 }
