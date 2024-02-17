@@ -4,7 +4,7 @@ import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
 import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.service.PostService
-import com.teamsparta.gigabox.infra.aws.AwsS3Service
+//import com.teamsparta.gigabox.infra.aws.AwsS3Service
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class PostController(
     private val postService: PostService,
-    private val awsS3Service: AwsS3Service
+//    private val awsS3Service: AwsS3Service
 ) {
     @GetMapping("/posts")
     fun getListPost(): ResponseEntity<List<PostResponse>> {
