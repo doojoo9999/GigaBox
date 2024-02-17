@@ -68,13 +68,13 @@ class PostServiceImpl(
         post.title = formData.title ?: post.title
         post.content = formData.content ?: post.content
 
-        storage.imageUrl.let { awsS3Service.deleteImage(it) }
+        storage.imageUrl?.let { awsS3Service.deleteImage(it) }
         storage.imageUrl = formData.imgUrl?.let {
             awsS3Service.uploadImage(it)
                 .toString()
                 .replace("[", "")
                 .replace("]", "")
-        }.toString()
+        } ?: storage.imageUrl
 
         return post.toResponse()
     }

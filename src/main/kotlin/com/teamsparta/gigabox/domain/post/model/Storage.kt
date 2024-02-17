@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction
 @Table(name = "post_storage")
 class Storage(
     @Column(name = "imageUrl")
-    var imageUrl: String,
+    var imageUrl: String?,
 
     @ManyToOne
     @JoinColumn
@@ -34,6 +34,6 @@ fun Storage.toResponse(): ImgUrlResponse {
     return ImgUrlResponse(
         id = id!!,
         postId = post.id!!,
-        imageUrl = imageUrl
+        imageUrl = imageUrl!!
     )
 }
