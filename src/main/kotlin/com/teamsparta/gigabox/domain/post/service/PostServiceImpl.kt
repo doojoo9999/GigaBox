@@ -43,7 +43,7 @@ class PostServiceImpl(
 
         val list: MutableList<Storage> = mutableListOf()
         formData.imgUrl?.let {
-            val uploadData = awsS3Service.uploadImage(it).map { url ->
+            awsS3Service.uploadImage(it).forEach { url ->
                 list.add(
                     storageRepository.save(
                         Storage(
@@ -68,15 +68,14 @@ class PostServiceImpl(
         post.title = formData.title ?: post.title
         post.content = formData.content ?: post.content
 
-        storage.imageUrl.also {
-            storage.imageUrl= awsS3Service.deleteImage(it)
+        storage.imageUrl.let { awsS3Service.deleteImage(it) }
+        storage.imageUrl = formData.imgUrl?.let {
+            awsS3Service.uploadImage(it)
                 .toString()
-                .replace("[", "").replace("]","")
-        }.let {
-            storage.imageUrl = awsS3Service.uploadImage(formData.imgUrl)
-                .toString()
-                .replace("[", "").replace("]","")
-        }
+                .replace("[", "")
+                .replace("]", "")
+        }.toString()
+
         return post.toResponse()
     }
 

@@ -19,7 +19,7 @@ class UploadServiceImpl(
 
         val list: MutableList<UploadEntity> = mutableListOf()
         multiFile.file?.let {
-            val uploadData = awsS3Service.uploadImage(it).map { url ->
+            awsS3Service.uploadImage(it).forEach { url ->
                 list.add(
                     uploadRepository.save(
                         UploadEntity(
