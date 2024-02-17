@@ -19,7 +19,7 @@ class SecurityConfig(
     )
 
     private val anonymousUrls = arrayOf(
-        "/signup", "/login",
+        "/signup", "/login", "**",
     )
 
     @Bean

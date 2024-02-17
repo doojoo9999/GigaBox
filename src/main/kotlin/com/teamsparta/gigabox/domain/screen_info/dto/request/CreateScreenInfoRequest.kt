@@ -6,5 +6,6 @@ data class CreateScreenInfoRequest (
     val startTime : Timestamp,
     val ticketing : Boolean,
     val preview : Boolean,
-    val cost : Int
+    val cost : Int,
+    val movieInfo : Long,
 )
