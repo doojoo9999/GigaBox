@@ -1,10 +1,8 @@
 package com.teamsparta.gigabox.domain.post.controller
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
-import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.service.PostService
-import com.teamsparta.gigabox.infra.aws.AwsS3Service
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -17,8 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1")
 @RestController
 class PostController(
-    private val postService: PostService,
-    private val awsS3Service: AwsS3Service
+    private val postService: PostService
 ) {
     @GetMapping("/posts")
     fun getListPost(
@@ -41,12 +38,13 @@ class PostController(
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(formData))
     }
 
-    @PatchMapping("/posts/{postId}")
+    @PatchMapping("/posts/{postId}/storages/{storageId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updatePost(
         @PathVariable postId: Long,
-        @RequestBody request: UpdatePostRequest
+        @PathVariable storageId: Long,
+        @ModelAttribute formData: PostRequest
     ): ResponseEntity<PostResponse> {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.updatePost(postId, request))
+        return ResponseEntity.status(HttpStatus.OK).body(postService.updatePost(postId, storageId, formData))
     }
 
     @DeleteMapping("/posts/{postId}")

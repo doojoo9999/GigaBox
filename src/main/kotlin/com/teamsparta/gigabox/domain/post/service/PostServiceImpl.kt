@@ -1,7 +1,6 @@
 package com.teamsparta.gigabox.domain.post.service
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
-import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import com.teamsparta.gigabox.domain.post.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.post.model.Post
@@ -62,11 +61,22 @@ class PostServiceImpl(
 
 
     @Transactional
-    override fun updatePost(postId: Long, request: UpdatePostRequest): PostResponse {
+    override fun updatePost(postId: Long, storageId: Long, formData: PostRequest): PostResponse {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
-        post.title = request.title ?: post.title
-        post.content = request.content ?: post.content
+        val storage = storageRepository.findByIdOrNull(storageId) ?: throw ModelNotFoundException("storage", storageId)
 
+        post.title = formData.title ?: post.title
+        post.content = formData.content ?: post.content
+
+        storage.imageUrl.also {
+            storage.imageUrl= awsS3Service.deleteImage(it)
+                .toString()
+                .replace("[", "").replace("]","")
+        }.let {
+            storage.imageUrl = awsS3Service.uploadImage(formData.imgUrl)
+                .toString()
+                .replace("[", "").replace("]","")
+        }
         return post.toResponse()
     }
 
