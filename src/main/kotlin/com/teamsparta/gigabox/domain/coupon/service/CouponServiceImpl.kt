@@ -7,6 +7,7 @@ import com.teamsparta.gigabox.domain.member.repository.MemberRepository
 import com.teamsparta.gigabox.infra.utility.couponutility.CouponUtility
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CouponServiceImpl(
@@ -15,12 +16,15 @@ class CouponServiceImpl(
     private val couponUtility: CouponUtility
 ) : CouponService {
 
+    @Transactional
     override fun createCoupons(request: AddCouponRequest) {
         val issuedBy = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
             ?: throw IllegalArgumentException("Invalid Member")
 
+        val coupons = mutableListOf<CouponEntity>()
+
         for (i in 0 .. request.howManyMake) {
-            couponRepository.save(CouponEntity(
+            coupons.add(CouponEntity(
                 content = request.content,
                 couponNumber = couponUtility.createCouponNumber(),
                 couponExp = request.couponExp,
@@ -28,6 +32,8 @@ class CouponServiceImpl(
                 memberId = issuedBy // 여기엔 쿠폰 사용한 사람이나 발급받은 사람 정보가 들어갈 거임
             ))
         }
+
+        couponRepository.saveAll(coupons)
 
     }
 
