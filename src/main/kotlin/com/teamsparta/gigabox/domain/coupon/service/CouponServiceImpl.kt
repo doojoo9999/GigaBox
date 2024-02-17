@@ -16,7 +16,6 @@ class CouponServiceImpl(
     private val couponUtility: CouponUtility
 ) : CouponService {
 
-    @Transactional
     override fun createCoupons(request: AddCouponRequest) {
         val issuedBy = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
             ?: throw IllegalArgumentException("Invalid Member")
