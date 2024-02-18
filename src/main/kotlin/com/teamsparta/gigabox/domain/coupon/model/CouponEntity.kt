@@ -23,6 +23,9 @@ class CouponEntity(
     @Column(name = "available")
     var available : Boolean,
 
+    @Column(name = "coupon_count")
+    val couponCount : Int,
+
     @JoinColumn(name = "issued_by")
     @ManyToOne
     val issuedBy : MemberEntity,

@@ -1,7 +1,8 @@
 package com.teamsparta.gigabox.domain.coupon.dto.request
 
-data class AddCouponRequest (
+data class AddCommonCouponRequest(
     val content : String,
-    val couponCount : Int,
+    val couponNumber : String,
     val couponExp : Int,
+    val couponCount : Int,
 )

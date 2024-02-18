@@ -1,5 +1,6 @@
 package com.teamsparta.gigabox.domain.coupon.controller
 
+import com.teamsparta.gigabox.domain.coupon.dto.request.AddCommonCouponRequest
 import com.teamsparta.gigabox.domain.coupon.dto.request.AddCouponRequest
 import com.teamsparta.gigabox.domain.coupon.dto.request.GetCouponRequest
 import com.teamsparta.gigabox.domain.coupon.dto.response.GetCouponResponse
@@ -19,7 +20,7 @@ class CouponController (
     private val couponService: CouponService
 ){
 
-    @PostMapping
+    @PostMapping("individual-coupon")
     fun createCoupons (
         @RequestBody request : AddCouponRequest
     ) : ResponseEntity <Unit> {
@@ -31,6 +32,18 @@ class CouponController (
             .build()
     }
 
+    @PostMapping("/common-coupon")
+    fun createCommonCoupons (
+        @RequestBody request : AddCommonCouponRequest
+    ) : ResponseEntity <Unit> {
+
+        couponService.createCommonCoupons(request)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .build()
+
+    }
 
     @PutMapping
     fun getCoupons (
