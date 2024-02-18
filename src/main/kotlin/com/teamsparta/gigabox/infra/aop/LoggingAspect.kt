@@ -15,7 +15,7 @@ class LoggingAspect {
     @Pointcut("execution(* com.teamsparta.gigabox.domain.*.controller.*.*(..))")
     private fun pointCut(){}
 
-    @Around("pointCut()")
+//    @Around("pointCut()")
     fun run(joinPoint: ProceedingJoinPoint): Any{
         val stopWatch = StopWatch()
 
