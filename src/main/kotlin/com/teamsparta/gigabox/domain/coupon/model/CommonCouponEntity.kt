@@ -25,7 +25,7 @@ class CommonCouponEntity (
 
     @JoinColumn(name = "member_id")
     @ManyToOne
-    val memberId : MemberEntity,
+    val memberId : MemberEntity?,
 
     @JoinColumn(name = "issued_by")
     @ManyToOne

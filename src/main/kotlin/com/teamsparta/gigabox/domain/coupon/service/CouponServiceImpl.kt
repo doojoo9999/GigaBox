@@ -80,9 +80,11 @@ class CouponServiceImpl(
             couponExp = request.couponExp,
             couponCount = request.couponCount,
             useCount = 0,
-            memberId =
+            memberId = null,
+            issuedBy = issuedBy
         )
 
+        commonCouponRepository.save(commonCoupon)
     }
 
 }
