@@ -2,7 +2,7 @@ package com.teamsparta.gigabox.domain.post.service
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
-import com.teamsparta.gigabox.domain.post.exception.ModelNotFoundException
+import com.teamsparta.gigabox.domain.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.post.model.Post
 import com.teamsparta.gigabox.domain.post.model.Storage
 import com.teamsparta.gigabox.domain.post.model.toResponse
@@ -55,7 +55,6 @@ class PostServiceImpl(
             }
             post.initImgUrl(list)
         }
-
         return post.toResponse()
     }
 

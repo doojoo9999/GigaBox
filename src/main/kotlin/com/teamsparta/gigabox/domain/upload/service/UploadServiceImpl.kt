@@ -1,7 +1,7 @@
 package com.teamsparta.gigabox.domain.upload.service
 
 import com.teamsparta.gigabox.domain.upload.dto.request.UploadRequest
-import com.teamsparta.gigabox.domain.post.exception.ModelNotFoundException
+import com.teamsparta.gigabox.domain.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.upload.model.UploadEntity
 import com.teamsparta.gigabox.domain.upload.repository.UploadRepository
 import com.teamsparta.gigabox.infra.aws.AwsS3Service

@@ -5,7 +5,6 @@ import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
 import jakarta.persistence.*
 
 @Entity
-//@SQLRestriction("deleted = false")
 @Table(name = "post")
 class Post(
     @Column(name = "title")
