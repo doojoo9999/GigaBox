@@ -9,7 +9,7 @@ import com.teamsparta.gigabox.domain.post.model.Storage
 import com.teamsparta.gigabox.domain.post.model.toResponse
 import com.teamsparta.gigabox.domain.post.repository.StorageRepository
 import com.teamsparta.gigabox.domain.post.repository.PostRepository
-import com.teamsparta.gigabox.infra.aws.AwsS3Service
+//import com.teamsparta.gigabox.infra.aws.AwsS3Service
 import java.time.LocalDateTime
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class PostServiceImpl(
     private val postRepository: PostRepository,
     private val storageRepository: StorageRepository,
-    private val awsS3Service: AwsS3Service
+//    private val awsS3Service: AwsS3Service
 ) : PostService {
     override fun getListPost(): List<PostResponse> {
         return postRepository.findAll().map { it.toResponse() }
@@ -40,20 +40,20 @@ class PostServiceImpl(
             )
         )
 
-        val list: MutableList<Storage> = mutableListOf()
-        formData.imgUrl?.let {
-            val uploadData = awsS3Service.uploadImage(it).map { url ->
-                list.add(
-                    storageRepository.save(
-                        Storage(
-                            post = post,
-                            imageUrl = url
-                        )
-                    )
-                )
-            }
-            post.initImgUrl(list)
-        }
+//        val list: MutableList<Storage> = mutableListOf()
+//        formData.imgUrl?.let {
+//            val uploadData = awsS3Service.uploadImage(it).map { url ->
+//                list.add(
+//                    storageRepository.save(
+//                        Storage(
+//                            post = post,
+//                            imageUrl = url
+//                        )
+//                    )
+//                )
+//            }
+//            post.initImgUrl(list)
+//        }
 
         return post.toResponse()
     }
