@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v2/movie-info")
 @RestController
 class MovieInfoControllerV2(
-    @Qualifier("MovieInfoServiceV2")
+    @Qualifier("RedisMovieInfoServiceV2")
     private val movieInfoService: MovieInfoService
 ) {
     @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색해서 In-memory Cache에 저장하기")

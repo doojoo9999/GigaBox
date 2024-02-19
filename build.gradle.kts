@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-//    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -67,11 +67,14 @@ dependencies {
     annotationProcessor ("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor ("jakarta.persistence:jakarta.persistence-api")
     //storage
-//    implementation("io.github.jan-tennert.supabase:storage-kt:2.1.2")
-//    implementation("io.ktor:ktor-client-cio:2.3.7")
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.1.2")
+    implementation("io.ktor:ktor-client-cio:2.3.7")
+    //aws
+    implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    implementation ("javax.xml.bind:jaxb-api:2.3.0")
 
     //redis
-//    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 tasks.withType<KotlinCompile> {

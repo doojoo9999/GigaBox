@@ -27,6 +27,7 @@ spring:
     redis:
       host: ${redis.host}
       port: ${redis.port}
+      url: redis://218.150.3.131:6379
 
 springdoc:
   swagger-ui:

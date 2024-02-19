@@ -4,33 +4,43 @@ import com.teamsparta.gigabox.domain.movie_info.dto.request.CreateMovieInfoReque
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
-import com.teamsparta.gigabox.domain.movie_info.repository.KeywordRepository
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
-import org.hibernate.annotations.Cache
-import org.springframework.cache.annotation.CachePut
+import com.teamsparta.gigabox.infra.aop.StopWatch
 import org.springframework.cache.annotation.Cacheable
+import com.teamsparta.gigabox.infra.cache.RedisService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
-@Service("MovieInfoServiceV2")
-class MovieInfoServiceImplV2(
-    private val movieInfoRepository: MovieInfoRepository
-): MovieInfoService {
-    override fun createMovieInfo(
-        request: CreateMovieInfoRequest
-    ) {
+@Service("RedisMovieInfoServiceV2")
+class RedisMovieInfoServiceImplV2(
+    private val movieInfoRepository: MovieInfoRepository,
+    private val redisService: RedisService
+): MovieInfoService  {
+    override fun createMovieInfo(request: CreateMovieInfoRequest) {
         TODO("Not yet implemented")
     }
 
-    @Cacheable(cacheNames = ["pageList"], key = "#keyword")
+    @StopWatch
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable
     ): Page<SearchResponse> {
-        return movieInfoRepository
-            .searchByKeyword(keyword, pageable)
+
+        val currentPage = redisService.getPageFromHash(keyword)
+            ?: getFromDBAndSaveRedis(keyword, pageable)
+
+        return currentPage
+    }
+
+    fun getFromDBAndSaveRedis(
+        keyword: String,
+        pageable: Pageable
+    ): Page<SearchResponse>{
+        val page = movieInfoRepository.searchByKeyword(keyword, pageable)
+
+        redisService.savePageToHash(keyword, page)
+        return page
     }
 
     override fun getTopSearched(): List<TopSearchResponse> {
