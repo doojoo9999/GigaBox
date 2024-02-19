@@ -2,11 +2,10 @@ package com.teamsparta.gigabox.domain.post.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
+import com.teamsparta.gigabox.infra.auditing.BaseEntity
 import jakarta.persistence.*
-import org.hibernate.annotations.SQLRestriction
 
 @Entity
-@SQLRestriction("deleted = false")
 @Table(name = "post")
 class Post(
     @Column(name = "title")
@@ -22,7 +21,7 @@ class Post(
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var storage: MutableList<Storage> = mutableListOf(),
 
-    ) : BaseTime() {
+    ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null

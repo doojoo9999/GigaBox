@@ -1,17 +1,16 @@
 package com.teamsparta.gigabox.domain.post.model
 
 import com.teamsparta.gigabox.domain.post.dto.response.ImgUrlResponse
+import com.teamsparta.gigabox.infra.auditing.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import org.springframework.data.annotation.CreatedDate
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "storage")
+@Table(name = "post_storage")
 class Storage(
     @Column(name = "imageUrl")
-    val imageUrl: String,
+    var imageUrl: String?,
 
     @ManyToOne
     @JoinColumn
@@ -21,24 +20,21 @@ class Storage(
     @Column(name = "deleted")
     var deleted: Boolean = false,
 
-) {
+    ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now()
 
     fun deleteImg() {
         deleted = true
     }
 
 }
+
 fun Storage.toResponse(): ImgUrlResponse {
     return ImgUrlResponse(
         id = id!!,
         postId = post.id!!,
-        imageUrl = imageUrl
+        imageUrl = imageUrl!!
     )
 }
