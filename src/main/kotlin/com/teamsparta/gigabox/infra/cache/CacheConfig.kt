@@ -36,9 +36,6 @@ class CacheConfig {
             .defaultCacheConfig()
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-//            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-//                GenericJackson2JsonRedisSerializer()
-//            ))
             .entryTtl(Duration.ofMinutes(30)) //캐시 유효기간을 30분으로 설정
 
         return RedisCacheManager

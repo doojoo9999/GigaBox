@@ -29,12 +29,10 @@ class RedisConfig(
         //String 자료구조를 위한 Serializer
         template.keySerializer = StringRedisSerializer()
         template.valueSerializer = StringRedisSerializer()
-//        template.valueSerializer = GenericJackson2JsonRedisSerializer()
 
         //Hash 자료구조를 위한 Serializer
         template.hashKeySerializer = StringRedisSerializer()
         template.hashValueSerializer = StringRedisSerializer()
-//        template.hashValueSerializer = GenericJackson2JsonRedisSerializer()
 
         return template
     }
