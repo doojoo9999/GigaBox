@@ -40,7 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -70,7 +70,12 @@ dependencies {
     //storage
     implementation("io.github.jan-tennert.supabase:storage-kt:2.1.2")
     implementation("io.ktor:ktor-client-cio:2.3.7")
+    //aws
+    implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    implementation ("javax.xml.bind:jaxb-api:2.3.0")
 
+    //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 tasks.withType<KotlinCompile> {
