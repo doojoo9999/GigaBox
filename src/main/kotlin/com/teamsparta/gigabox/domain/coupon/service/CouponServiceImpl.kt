@@ -9,6 +9,7 @@ import com.teamsparta.gigabox.domain.coupon.model.CouponEntity
 import com.teamsparta.gigabox.domain.coupon.repository.CommonCouponRepository
 import com.teamsparta.gigabox.domain.coupon.repository.CouponRepository
 import com.teamsparta.gigabox.domain.member.repository.MemberRepository
+import com.teamsparta.gigabox.infra.aop.StopWatch
 import com.teamsparta.gigabox.infra.utility.couponutility.CouponUtility
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -23,6 +24,7 @@ class CouponServiceImpl(
 ) : CouponService {
 
     @Transactional
+    @StopWatch
     override fun createCoupons(request: AddCouponRequest) {
         val issuedBy = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
             ?: throw IllegalArgumentException("Invalid Member")

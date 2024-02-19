@@ -14,7 +14,7 @@ class StopWatchAspect {
     private val logger = LoggerFactory.getLogger("Execution Time Logger")
 
     @Around("@annotation(com.teamsparta.gigabox.infra.aop.StopWatch)")
-    fun run (joinPoint: ProceedingJoinPoint) : Any {
+    fun run (joinPoint: ProceedingJoinPoint) {
         val stopWatch = StopWatch()
 
         stopWatch.start()
@@ -27,7 +27,7 @@ class StopWatchAspect {
         val timeElapsedMs = stopWatch.totalTimeMillis
         logger.info ("Method Name: $methodName | Arguments: ${methodArguments.joinToString (",") } | Excution Time : ${timeElapsedMs}ms")
 
-        return result
+//        return result
     }
 
 }
