@@ -45,10 +45,6 @@ class CouponServiceImpl(
 
     }
 
-
-
-
-
     override fun getCoupon( request: GetCouponRequest) : GetCouponResponse {
         val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
             ?: throw IllegalArgumentException("Invalid Member")

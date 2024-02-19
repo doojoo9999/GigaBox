@@ -1,12 +1,12 @@
-//package com.teamsparta.gigabox.infra.aop
-//
-//import org.aspectj.lang.ProceedingJoinPoint
-//import org.aspectj.lang.annotation.*
-//import org.slf4j.LoggerFactory
-//import org.springframework.context.annotation.EnableAspectJAutoProxy
-//import org.springframework.stereotype.Component
-//import org.springframework.util.StopWatch
-//
+package com.teamsparta.gigabox.infra.aop
+
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.annotation.*
+import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.EnableAspectJAutoProxy
+import org.springframework.stereotype.Component
+import org.springframework.util.StopWatch
+
 //@Aspect
 //@Component
 //class LoggingAspect {
