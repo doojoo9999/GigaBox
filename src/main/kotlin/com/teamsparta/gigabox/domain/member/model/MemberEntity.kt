@@ -12,23 +12,28 @@ import java.util.Date
 @Table(name = "member")
 class MemberEntity(
     @Column(name = "account")
-    val account : String,
+    val account: String?,
 
     @Column(name = "password")
-    val password : String,
+    val password: String?,
 
     @Column(name = "email")
-    val email: String,
+    val email: String?,
 
     @Column(name = "birth_date")
-    val birthDate : Date,
+    val birthDate: Date?,
 
     @Column(name = "phone_number")
-    val phoneNumber : String,
+    val phoneNumber: String?,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    var role : UserRole
+    var role: UserRole,
+
+    @Enumerated(EnumType.STRING)
+    val provider: OAuth2Provider?,
+    val providerId: String?,
+    val nickname: String?
 
 ) {
     @Id
@@ -43,4 +48,25 @@ class MemberEntity(
     @Column(name = "updated_at")
     lateinit var updatedAt : LocalDateTime
 
+    companion object {
+        fun ofKakao(id: Long, nickname: String): MemberEntity {
+            return MemberEntity(
+                provider = OAuth2Provider.KAKAO,
+                providerId = id.toString(),
+                account = null,
+                password = null,
+                birthDate = null,
+                email = null,
+                phoneNumber = null,
+                nickname = nickname,
+                role = UserRole.MEMBER
+
+
+             )
+        }
+    }
+}
+
+enum class OAuth2Provider {
+    KAKAO
 }

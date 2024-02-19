@@ -53,6 +53,9 @@ class MemberServiceImpl(
                 email = request.email,
                 birthDate = request.birthDate,
                 phoneNumber = request.phoneNumber,
+                providerId = null,
+                provider = null,
+                nickname = null,
                 role = UserRole.PRE_MEMBER
             )
         )

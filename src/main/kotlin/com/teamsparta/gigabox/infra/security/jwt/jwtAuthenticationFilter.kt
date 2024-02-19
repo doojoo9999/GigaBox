@@ -30,7 +30,7 @@ class jwtAuthenticationFilter(
                 .onSuccess {
                     val memberId = it.payload.subject.toLong()
                     val role = it.payload.get("role", String::class.java)
-                    val account = it.payload.get("email", String::class.java)
+                    val account = it.payload.get("account", String::class.java)
                     val principal = UserPrincipal(
                         id = memberId,
                         account = account,
