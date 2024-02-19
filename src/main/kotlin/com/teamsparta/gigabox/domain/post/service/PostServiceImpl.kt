@@ -98,8 +98,8 @@ class PostServiceImpl(
     @Scheduled(cron = "0 0 12 * * ?")
     @Transactional
     fun deleteData() {
-        val dataBefore90days = LocalDateTime.now()
-        storageRepository.deleteStorageByCreatedAtLessThanAndDeleted(dataBefore90days, true)
-        postRepository.deletePostByCreatedAtLessThanEqualAndDeleted(dataBefore90days, true)
+        val dataBefore30days = LocalDateTime.now().minusDays(30)
+        storageRepository.deleteStorageByCreatedAtLessThanAndDeleted(dataBefore30days, true)
+        postRepository.deletePostByCreatedAtLessThanEqualAndDeleted(dataBefore30days, true)
     }
 }
