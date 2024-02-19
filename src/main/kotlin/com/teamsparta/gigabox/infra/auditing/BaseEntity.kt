@@ -3,21 +3,21 @@ package com.teamsparta.gigabox.infra.auditing
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
-import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
-@EntityListeners(AuditingEntityListener::class)
 @MappedSuperclass
-class BaseEntity(){
+@EntityListeners(AuditingEntityListener::class)
+abstract class BaseEntity() {
     @CreatedDate
-    @Column(name = "created_at", updatable = false)
+    @Column(nullable = false, updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
+        protected set
 
     @LastModifiedDate
-    @Column(name = "updated_at")
+    @Column(nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now()
+        protected set
 }
