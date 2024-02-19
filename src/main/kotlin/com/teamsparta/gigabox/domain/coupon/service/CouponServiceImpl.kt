@@ -85,4 +85,12 @@ class CouponServiceImpl(
         commonCouponRepository.save(commonCoupon)
     }
 
+    override fun getCommonCoupon(request : GetCouponRequest) {
+        val memberId = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
+            ?: throw IllegalArgumentException("Invalid Member")
+
+
+
+    }
+
 }
