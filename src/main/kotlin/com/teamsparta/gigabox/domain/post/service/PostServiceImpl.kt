@@ -1,15 +1,16 @@
 package com.teamsparta.gigabox.domain.post.service
 
 import com.teamsparta.gigabox.domain.post.dto.request.PostRequest
-import com.teamsparta.gigabox.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.gigabox.domain.post.dto.response.PostResponse
-import com.teamsparta.gigabox.domain.post.exception.ModelNotFoundException
+import com.teamsparta.gigabox.domain.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.post.model.Post
 import com.teamsparta.gigabox.domain.post.model.Storage
 import com.teamsparta.gigabox.domain.post.model.toResponse
 import com.teamsparta.gigabox.domain.post.repository.StorageRepository
 import com.teamsparta.gigabox.domain.post.repository.PostRepository
-//import com.teamsparta.gigabox.infra.aws.AwsS3Service
+import com.teamsparta.gigabox.infra.aws.AwsS3Service
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.time.LocalDateTime
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional
 class PostServiceImpl(
     private val postRepository: PostRepository,
     private val storageRepository: StorageRepository,
-//    private val awsS3Service: AwsS3Service
+    private val awsS3Service: AwsS3Service
 ) : PostService {
-    override fun getListPost(): List<PostResponse> {
-        return postRepository.findAll().map { it.toResponse() }
+    override fun getListPost(pageable: Pageable): Page<PostResponse> {
+        return postRepository.findAll(pageable).map { it.toResponse() }
     }
 
     override fun getPost(postId: Long): PostResponse {
@@ -40,30 +41,39 @@ class PostServiceImpl(
             )
         )
 
-//        val list: MutableList<Storage> = mutableListOf()
-//        formData.imgUrl?.let {
-//            val uploadData = awsS3Service.uploadImage(it).map { url ->
-//                list.add(
-//                    storageRepository.save(
-//                        Storage(
-//                            post = post,
-//                            imageUrl = url
-//                        )
-//                    )
-//                )
-//            }
-//            post.initImgUrl(list)
-//        }
-
+        val list: MutableList<Storage> = mutableListOf()
+        formData.imgUrl?.let {
+            awsS3Service.uploadImage(it).forEach { url ->
+                list.add(
+                    storageRepository.save(
+                        Storage(
+                            post = post,
+                            imageUrl = url
+                        )
+                    )
+                )
+            }
+            post.initImgUrl(list)
+        }
         return post.toResponse()
     }
 
 
     @Transactional
-    override fun updatePost(postId: Long, request: UpdatePostRequest): PostResponse {
+    override fun updatePost(postId: Long, storageId: Long, formData: PostRequest): PostResponse {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
-        post.title = request.title ?: post.title
-        post.content = request.content ?: post.content
+        val storage = storageRepository.findByIdOrNull(storageId)
+
+        post.title = formData.title ?: post.title
+        post.content = formData.content ?: post.content
+
+        storage?.imageUrl?.let { awsS3Service.deleteImage(it) }
+        storage?.imageUrl = formData.imgUrl?.let {
+            awsS3Service.uploadImage(it)
+                .toString()
+                .replace("[", "")
+                .replace("]", "")
+        } ?: storage?.imageUrl
 
         return post.toResponse()
     }
@@ -78,7 +88,10 @@ class PostServiceImpl(
         post.deletePost()
 
         postRepository.save(post)
-//        awsS3Service.deleteImage(storageList[0].imageUrl)
+
+        storageList.forEach {
+            awsS3Service.deleteImage(it.imageUrl)
+        }
     }
 
 
@@ -87,12 +100,6 @@ class PostServiceImpl(
     fun deleteData() {
         val dataBefore90days = LocalDateTime.now()
         storageRepository.deleteStorageByCreatedAtLessThanAndDeleted(dataBefore90days, true)
+        postRepository.deletePostByCreatedAtLessThanEqualAndDeleted(dataBefore90days, true)
     }
-
-//    @Transactional
-//    @Scheduled(cron = "0 59 19 * * ?")
-//    fun deletePostData() {
-//        val dataPostBefore90days = LocalDateTime.now()
-//        postRepository.deletePostByCreatedAtLessThanAndDeleted(dataPostBefore90days,true)
-//    }
 }
