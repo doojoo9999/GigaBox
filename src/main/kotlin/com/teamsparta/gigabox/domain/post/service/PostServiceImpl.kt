@@ -62,18 +62,18 @@ class PostServiceImpl(
     @Transactional
     override fun updatePost(postId: Long, storageId: Long, formData: PostRequest): PostResponse {
         val post = postRepository.findByIdOrNull(postId) ?: throw ModelNotFoundException("post", postId)
-        val storage = storageRepository.findByIdOrNull(storageId) ?: throw ModelNotFoundException("storage", storageId)
+        val storage = storageRepository.findByIdOrNull(storageId)
 
         post.title = formData.title ?: post.title
         post.content = formData.content ?: post.content
 
-        storage.imageUrl?.let { awsS3Service.deleteImage(it) }
-        storage.imageUrl = formData.imgUrl?.let {
+        storage?.imageUrl?.let { awsS3Service.deleteImage(it) }
+        storage?.imageUrl = formData.imgUrl?.let {
             awsS3Service.uploadImage(it)
                 .toString()
                 .replace("[", "")
                 .replace("]", "")
-        } ?: storage.imageUrl
+        } ?: storage?.imageUrl
 
         return post.toResponse()
     }
