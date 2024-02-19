@@ -79,18 +79,34 @@ class CouponServiceImpl(
             couponCount = request.couponCount,
             useCount = 0,
             memberId = null,
-            issuedBy = issuedBy
+            issuedBy = issuedBy,
+            available = true
         )
 
         commonCouponRepository.save(commonCoupon)
     }
 
-    override fun getCommonCoupon(request : GetCouponRequest) {
-        val memberId = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
+    override fun getCommonCoupon(request : GetCouponRequest) : GetCouponResponse {
+        val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
             ?: throw IllegalArgumentException("Invalid Member")
 
+        val couponCheck = commonCouponRepository.findByCouponNumber(request.couponNumber)
+            ?: throw IllegalArgumentException("쿠폰 번호가 틀렸습니다.")
 
+        if (!couponCheck.available) {
+            throw IllegalArgumentException("사용할 수 없는 쿠폰입니다.")
+        }
 
+        if (couponCheck.couponCount <= couponCheck.useCount) {
+            throw IllegalArgumentException("쿠폰이 모두 소진되었습니다.")
+        }
+
+        couponCheck.memberId = userCheck
+        couponCheck.useCount += 1
+
+        commonCouponRepository.save(couponCheck)
+
+        return GetCouponResponse(couponNumber = couponCheck.couponNumber)
     }
 
 }
