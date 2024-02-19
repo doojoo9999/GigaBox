@@ -16,7 +16,7 @@ class UploadController(
 ) {
 
     @Operation(summary = "파일 업로드", description = "파일을 업로드 할 수 있다.")
-    @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping("/uploads", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun fileUpload(
         @ModelAttribute multiFile: UploadRequest
     ): ResponseEntity<String> {
@@ -24,7 +24,7 @@ class UploadController(
     }
 
     @Operation(summary = "파일 삭제", description = "파일을 삭제 할 수 있다.")
-    @DeleteMapping("/upload/{uploadId}")
+    @DeleteMapping("/uploads/{uploadId}")
     fun fileDelete(
         @PathVariable uploadId: Long
     ): ResponseEntity<String> {
