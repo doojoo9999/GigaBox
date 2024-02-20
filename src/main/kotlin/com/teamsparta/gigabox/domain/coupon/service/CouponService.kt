@@ -13,6 +13,6 @@ interface CouponService {
 
     fun createCommonCoupons(request : AddCommonCouponRequest)
 
-    fun getCommonCoupon (request : GetCouponRequest)
+    fun getCommonCoupon (request : GetCouponRequest) : GetCouponResponse
 
 }
