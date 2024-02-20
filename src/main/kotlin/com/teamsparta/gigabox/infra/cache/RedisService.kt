@@ -16,8 +16,10 @@ class RedisService(
     private val redisTemplate: RedisTemplate<String, String>
 ) {
     private val movieInfoHashTableName = "MovieInfoSearchCache"
-    private val movieInfoHashTableTime = 30L
+    private val movieInfoHashTableTime = 5L
     private val movieInfoTimeUnit = TimeUnit.MINUTES
+    private val tmpKey = "tmpKey"
+    private val tmpValue = "tmpValue"
 
     private var hashOperations = redisTemplate.opsForHash<String, String>()
     private val objectMapper = setObjectMapper()
@@ -34,15 +36,19 @@ class RedisService(
 
     //redis에 key가 없을 때 임시 데이터 넣고 <- 이거 없으면 TTL 설정이 안 됨
     //TTL 설정해주는 코드
-    private fun checkHashTableHasKey(){
-        if(!redisTemplate.hasKey(movieInfoHashTableName)){
+    private fun hashTableInit(){
+        if(!checkHashTableHasKey()){
             hashOperations.put(
                 movieInfoHashTableName,
-                "tmpKey",
-                "tmpValue"
+                tmpKey,
+                tmpValue
             )
             setHashTableExpire()
         }
+    }
+
+    fun checkHashTableHasKey(): Boolean{
+        return redisTemplate.hasKey(movieInfoHashTableName)
     }
 
     private fun setHashTableExpire(){
@@ -66,7 +72,7 @@ class RedisService(
         currentPage:List<SearchResponse>,
         pageable: Pageable
     ){
-        checkHashTableHasKey()
+        hashTableInit()
         hashOperations.put(
             movieInfoHashTableName,
             makeKey(keyword, pageable.pageNumber),
@@ -74,27 +80,27 @@ class RedisService(
         )
     }
 
-    fun contentToJson(
+    private fun contentToJson(
         currentPage:List<SearchResponse>
     ): String{
         return objectMapper.writeValueAsString(currentPage)
     }
 
-    fun jsonToContent(
+    private fun jsonToContent(
         jsonString: String
     ): MutableList<SearchResponse>{
         return objectMapper.readValue(jsonString)
     }
 
-//    fun pageToJson(
+//    private fun pageToJson(
 //        currentPage:Page<SearchResponse>
 //    ): String{
 //        return objectMapper.writeValueAsString(
 //            CustomPageImpl(currentPage)
 //        )
 //    }
-
-//    fun jsonToPage(
+//
+//    private fun jsonToPage(
 //        jsonString: String
 //    ): Page<SearchResponse>?{
 //        val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
@@ -111,4 +117,34 @@ class RedisService(
             append(pageNumber)
         }.toString()
     }
+
+    //키를 전부 반환
+//    fun getMovieHashTableKey(): Set<String>{
+//        return hashOperations.keys(movieInfoHashTableName)
+//    }
+
+//    fun updateAllMovieHashTable(
+//        hashTableKeys: Set<String>,
+//        searchList: List<SearchResponse>
+//    ){
+//        hashOperations.putAll(
+//            movieInfoHashTableName,
+//        )
+//    }
+//
+//    fun makeMap(
+//        hashTableKeys: Set<String>,
+//        searchList: List<SearchResponse>
+//    ): MutableMap<String, String>{
+//        val map: MutableMap<String, String> = mutableMapOf()
+//
+//        val hashTableIterator = hashTableKeys.iterator()
+//        val searchListIterator = searchList.listIterator()
+//
+////        while (hashTableIterator.hasNext() && searchListIterator.hasNext()){
+////            map[hashTableIterator.next()] = searchListIterator.next()
+////        }
+//
+//        return map
+//    }
 }

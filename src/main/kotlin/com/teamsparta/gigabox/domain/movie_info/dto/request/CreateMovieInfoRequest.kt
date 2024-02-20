@@ -29,7 +29,7 @@ data class CreateMovieInfoRequest (
 
     @field:NotBlank(message = "{NotBlank.ratings}")
     @field:Size(min = 1, max = 15, message = "관람 등급은 1자 이상 15자 이하로 작성해주세요")
-    @Schema(description = "영화 관람등급", example = "전체이용가")
+    @Schema(description = "영화 관람등급", example = "전체관람가")
     val ratings : String,
 
     @Schema(description = "상영 시간", example = "120")

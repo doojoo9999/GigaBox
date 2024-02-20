@@ -22,7 +22,10 @@ import org.springframework.stereotype.Repository
 class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
     private val movieInfo = QMovieInfoEntity.movieInfoEntity
     private val keywordEntity = QKeywordEntity.keywordEntity
-    override fun searchByKeyword(keyword: String, pageable: Pageable): List<SearchResponse> {
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): List<SearchResponse> {
         val whereClause = BooleanBuilder()
         whereClause.and(movieInfo.title.contains(keyword))
 
@@ -50,7 +53,10 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
 //        return PageImpl(contents, pageable, totalCount)
 
     }
-    private fun getOrderSpecifier(pageable: Pageable, path: EntityPathBase<*>): Array<OrderSpecifier<*>>{
+    private fun getOrderSpecifier(
+        pageable: Pageable,
+        path: EntityPathBase<*>
+    ): Array<OrderSpecifier<*>>{
         val pathBuilder = PathBuilder(path.type, path.metadata)
 
         return pageable.sort.toList().map {
@@ -84,4 +90,31 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
             .where(keywordEntity.word.`in`(*titles))
             .fetch()
     }
+
+//    override fun findByHashKey(
+//        hashTableKeys: Set<String>
+//    ): List<SearchResponse> {
+//        val whereClause = BooleanBuilder()
+//        for (key in hashTableKeys){
+//            whereClause.or(movieInfo.title.contains(key.split(":")[0]))
+//        }
+//
+////        for(key in hashTableKeys){
+////            BooleanBuilder().or(
+////                movieInfo.title.contains(key.split(":")[0])
+////            ).let { whereClause.and(it) }
+////        }
+//
+//        return queryFactory
+//            .select(
+//                Projections.constructor(
+//                    SearchResponse::class.java,
+//                    movieInfo.id,
+//                    movieInfo.title
+//                )
+//            )
+//            .from(movieInfo)
+//            .where(whereClause)
+//            .fetch()
+//    }
 }

@@ -12,4 +12,6 @@ interface CustomRepository {
     fun getTopSearched(): List<TopSearchResponse>
 
     fun findByTitles(titles: Array<String>): List<KeywordEntity>
+
+//    fun findByHashKey(hashTableKeys: Set<String>): List<SearchResponse>
 }
