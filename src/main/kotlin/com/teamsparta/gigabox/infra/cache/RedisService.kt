@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
@@ -45,7 +46,7 @@ class RedisService(
     ){
         hashOperations.put(
             movieInfoHashTableName,
-            keyword + currentPage.pageable.pageNumber,
+            makeKey(keyword, currentPage.pageable.pageNumber),
             pageToJson(currentPage)
         )
 
@@ -69,5 +70,16 @@ class RedisService(
     ): Page<SearchResponse>?{
         val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
         return page
+    }
+
+    fun makeKey(
+        keyword: String,
+        pageNumber: Int
+    ): String{
+        return StringBuilder().apply {
+            append(keyword)
+            append(":")
+            append(pageNumber)
+        }.toString()
     }
 }
