@@ -6,7 +6,6 @@ import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
 import com.teamsparta.gigabox.infra.aop.StopWatch
-import org.springframework.cache.annotation.Cacheable
 import com.teamsparta.gigabox.infra.cache.RedisService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
