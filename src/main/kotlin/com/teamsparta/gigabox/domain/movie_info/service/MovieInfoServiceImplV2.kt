@@ -28,7 +28,7 @@ class MovieInfoServiceImplV2(
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable
-    ): Page<SearchResponse> {
+    ): List<SearchResponse> {
         return movieInfoRepository
             .searchByKeyword(keyword, pageable)
     }

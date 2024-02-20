@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable
 interface MovieInfoService {
     fun createMovieInfo(request : CreateMovieInfoRequest)
 
-    fun searchByKeyword(keyword: String, pageable: Pageable): Page<SearchResponse>
+    fun searchByKeyword(keyword: String, pageable: Pageable): List<SearchResponse>
 
     fun getTopSearched(): List<TopSearchResponse>
 

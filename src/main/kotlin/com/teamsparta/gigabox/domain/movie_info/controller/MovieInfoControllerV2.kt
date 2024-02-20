@@ -40,7 +40,7 @@ class MovieInfoControllerV2(
             size = 10,
             sort = ["title"]
         ) pageable: Pageable
-    ): ResponseEntity<Page<SearchResponse>> {
+    ): ResponseEntity<List<SearchResponse>> {
 
         return ResponseEntity
             .status(HttpStatus.OK)

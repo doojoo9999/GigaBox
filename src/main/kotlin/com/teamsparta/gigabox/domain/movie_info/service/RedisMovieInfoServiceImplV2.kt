@@ -7,7 +7,6 @@ import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
 import com.teamsparta.gigabox.infra.aop.StopWatch
 import com.teamsparta.gigabox.infra.cache.RedisService
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
@@ -24,7 +23,7 @@ class RedisMovieInfoServiceImplV2(
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable
-    ): Page<SearchResponse> {
+    ): List<SearchResponse> {
         val key = redisService.makeKey(keyword, pageable.pageNumber)
 
         return redisService.getPageFromHash(key)
@@ -34,15 +33,15 @@ class RedisMovieInfoServiceImplV2(
     fun getFromDBAndSaveRedis(
         keyword: String,
         pageable: Pageable
-    ): Page<SearchResponse>{
+    ): List<SearchResponse>{
         //DB에서 검색 결과를 가져온다.
-        val page = movieInfoRepository.searchByKeyword(keyword, pageable)
+        val pageList = movieInfoRepository.searchByKeyword(keyword, pageable)
 
         //검색 결과가 있을 때만 Cache 저장
-        if(page.content.isNotEmpty())
-            redisService.savePageToHash(keyword, page)
+        if(pageList.isNotEmpty())
+            redisService.savePageToHash(keyword, pageList, pageable)
 
-        return page
+        return pageList
     }
 
     override fun getTopSearched(): List<TopSearchResponse> {

@@ -19,11 +19,11 @@ data class CreateMovieInfoRequest (
     @Schema(description = "영화 평점", example = "10.0")
     val grade : Float,
 
-    @field:Size(min = 1, max = 3, message = "감독 이름은 1자 이상 30자 이하로 작성해주세요")
+    @field:Size(min = 1, max = 30, message = "감독 이름은 1자 이상 30자 이하로 작성해주세요")
     @Schema(description = "영화 감독", example = "감독")
     val director : String,
 
-    @field:Size(min = 1, max = 3, message = "출연진들 이름은 1자 이상 100자 이하로 작성해주세요")
+    @field:Size(min = 1, max = 100, message = "출연진들 이름은 1자 이상 100자 이하로 작성해주세요")
     @Schema(description = "영화 출연진", example = "출연진")
     val actors : String,
 

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
@@ -33,23 +32,20 @@ class RedisService(
                 ObjectMapper.DefaultTyping.EVERYTHING)
     }
 
-    fun getPageFromHash(
-        key: String
-    ): Page<SearchResponse>? {
-        return hashOperations.get(movieInfoHashTableName, key)
-            ?.let { jsonToPage(it) }
+    //redis에 key가 없을 때 임시 데이터 넣고 <- 이거 없으면 TTL 설정이 안 됨
+    //TTL 설정해주는 코드
+    private fun checkHashTableHasKey(){
+        if(!redisTemplate.hasKey(movieInfoHashTableName)){
+            hashOperations.put(
+                movieInfoHashTableName,
+                "tmpKey",
+                "tmpValue"
+            )
+            setHashTableExpire()
+        }
     }
 
-    fun savePageToHash(
-        keyword: String,
-        currentPage:Page<SearchResponse>
-    ){
-        hashOperations.put(
-            movieInfoHashTableName,
-            makeKey(keyword, currentPage.pageable.pageNumber),
-            pageToJson(currentPage)
-        )
-
+    private fun setHashTableExpire(){
         redisTemplate.expire(
             movieInfoHashTableName,
             movieInfoHashTableTime,
@@ -57,20 +53,53 @@ class RedisService(
         )
     }
 
-    fun pageToJson(
-        currentPage:Page<SearchResponse>
-    ): String{
-        return objectMapper.writeValueAsString(
-            CustomPageImpl(currentPage)
+    fun getPageFromHash(
+        key: String
+    ): List<SearchResponse>? {
+        return hashOperations.get(movieInfoHashTableName, key)
+//            ?.let { jsonToPage(it) }
+            ?.let { jsonToContent(it) }
+    }
+
+    fun savePageToHash(
+        keyword: String,
+        currentPage:List<SearchResponse>,
+        pageable: Pageable
+    ){
+        checkHashTableHasKey()
+        hashOperations.put(
+            movieInfoHashTableName,
+            makeKey(keyword, pageable.pageNumber),
+            contentToJson(currentPage)
         )
     }
 
-    fun jsonToPage(
-        jsonString: String
-    ): Page<SearchResponse>?{
-        val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
-        return page
+    fun contentToJson(
+        currentPage:List<SearchResponse>
+    ): String{
+        return objectMapper.writeValueAsString(currentPage)
     }
+
+    fun jsonToContent(
+        jsonString: String
+    ): MutableList<SearchResponse>{
+        return objectMapper.readValue(jsonString)
+    }
+
+//    fun pageToJson(
+//        currentPage:Page<SearchResponse>
+//    ): String{
+//        return objectMapper.writeValueAsString(
+//            CustomPageImpl(currentPage)
+//        )
+//    }
+
+//    fun jsonToPage(
+//        jsonString: String
+//    ): Page<SearchResponse>?{
+//        val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
+//        return page
+//    }
 
     fun makeKey(
         keyword: String,
