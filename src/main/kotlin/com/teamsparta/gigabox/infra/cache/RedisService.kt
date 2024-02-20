@@ -40,20 +40,22 @@ class RedisService(
     }
 
     fun savePageToHash(
-        key: String,
+        keyword: String,
         currentPage:Page<SearchResponse>
     ){
         hashOperations.put(
             Movie_Info_HASH_TABLE_NAME,
-            key,
-            pageToJson(CustomPageImpl(currentPage))
+            keyword + currentPage.pageable.pageNumber,
+            pageToJson(currentPage)
         )
     }
 
     fun pageToJson(
-        currentPage:CustomPageImpl<SearchResponse>
+        currentPage:Page<SearchResponse>
     ): String{
-        return objectMapper.writeValueAsString(currentPage)
+        return objectMapper.writeValueAsString(
+            CustomPageImpl(currentPage)
+        )
     }
 
     fun jsonToPage(

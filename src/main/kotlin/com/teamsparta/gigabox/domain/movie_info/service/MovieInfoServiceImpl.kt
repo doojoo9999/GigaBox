@@ -7,6 +7,7 @@ import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.model.MovieInfoEntity
 import com.teamsparta.gigabox.domain.movie_info.repository.KeywordRepository
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
+import com.teamsparta.gigabox.infra.aop.StopWatch
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.data.domain.Pageable
@@ -26,6 +27,7 @@ class MovieInfoServiceImpl(
         )
     }
 
+    @StopWatch
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable

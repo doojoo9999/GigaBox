@@ -25,8 +25,9 @@ class RedisMovieInfoServiceImplV2(
         keyword: String,
         pageable: Pageable
     ): Page<SearchResponse> {
+        val key = keyword + pageable.pageNumber
 
-        val currentPage = redisService.getPageFromHash(keyword)
+        val currentPage = redisService.getPageFromHash(key)
             ?: getFromDBAndSaveRedis(keyword, pageable)
 
         return currentPage
