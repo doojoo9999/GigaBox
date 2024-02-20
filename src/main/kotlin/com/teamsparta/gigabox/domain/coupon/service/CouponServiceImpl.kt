@@ -7,7 +7,7 @@ import com.teamsparta.gigabox.domain.coupon.dto.response.GetCouponResponse
 import com.teamsparta.gigabox.domain.coupon.model.CommonCouponEntity
 import com.teamsparta.gigabox.domain.coupon.model.CouponEntity
 import com.teamsparta.gigabox.domain.coupon.repository.CommonCouponRepository
-import com.teamsparta.gigabox.domain.coupon.repository.CouponRepositoryImpl
+import com.teamsparta.gigabox.domain.coupon.repository.CouponRepository
 import com.teamsparta.gigabox.domain.member.repository.MemberRepository
 import com.teamsparta.gigabox.infra.aop.StopWatch
 import com.teamsparta.gigabox.infra.utility.couponutility.CouponUtility
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CouponServiceImpl(
-    private val couponRepository: CouponRepositoryImpl,
+    private val couponRepository: CouponRepository,
     private val memberRepository: MemberRepository,
     private val couponUtility: CouponUtility,
     private val commonCouponRepository : CommonCouponRepository,
