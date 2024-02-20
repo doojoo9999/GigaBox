@@ -87,14 +87,17 @@ class CouponServiceImpl(
         commonCouponRepository.save(commonCoupon)
     }
 
+    @Transactional
     override fun getCommonCoupon(request : GetCouponRequest) : GetCouponResponse {
         val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
             ?: throw IllegalArgumentException("Invalid Member")
 
         val couponCheck = commonCouponRepository.findByCouponNumber(request.couponNumber)?.apply {
-            if (available && couponCount >= useCount) {
+            if (available && couponCount > useCount) {
                 memberId = userCheck
-                useCount += 1
+//                useCount += 1
+                commonCouponRepository.incUseCount(request.couponNumber) // useCount 증가를 db에서 직접 증가시킴
+                // 근데 이렇게 하면 오히려 300+ 개수만큼이 발급되지 않을까
             } else {
                 throw IllegalArgumentException("사용할 수 없는 쿠폰입니다.")
             }
