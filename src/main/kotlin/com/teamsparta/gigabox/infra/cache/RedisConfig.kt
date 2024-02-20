@@ -16,7 +16,7 @@ class RedisConfig(
 ) {
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory{
-        return LettuceConnectionFactory()
+        return LettuceConnectionFactory(host, port)
     }
 
     @Bean
