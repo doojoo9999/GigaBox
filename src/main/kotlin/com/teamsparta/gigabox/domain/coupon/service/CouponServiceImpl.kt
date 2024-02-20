@@ -45,6 +45,7 @@ class CouponServiceImpl(
 
         couponRepository.insertCoupons(coupons)
 
+//        couponRepository.saveAll(coupons)
     }
 
     override fun getCoupon( request: GetCouponRequest) : GetCouponResponse {
@@ -91,7 +92,7 @@ class CouponServiceImpl(
             ?: throw IllegalArgumentException("Invalid Member")
 
         val couponCheck = commonCouponRepository.findByCouponNumber(request.couponNumber)?.apply {
-            if (available && couponCount > useCount) {
+            if (available && couponCount >= useCount) {
                 memberId = userCheck
                 useCount += 1
             } else {
@@ -101,16 +102,15 @@ class CouponServiceImpl(
 
         commonCouponRepository.save(couponCheck)
 
-//        if (couponCheck.available && couponCheck.couponCount >= couponCheck.useCount) {
+        return GetCouponResponse(couponNumber = couponCheck.couponNumber)
+
+        //        if (couponCheck.available && couponCheck.couponCount >= couponCheck.useCount) {
 //
 //        }
 //
 //        couponCheck.memberId = userCheck
 //        couponCheck.useCount += 1
 
-
-
-        return GetCouponResponse(couponNumber = couponCheck.couponNumber)
     }
 
 }
