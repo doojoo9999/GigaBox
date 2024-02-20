@@ -25,20 +25,23 @@ class RedisMovieInfoServiceImplV2(
         keyword: String,
         pageable: Pageable
     ): Page<SearchResponse> {
+        val key = redisService.makeKey(keyword, pageable.pageNumber)
 
-        val currentPage = redisService.getPageFromHash(keyword)
+        return redisService.getPageFromHash(key)
             ?: getFromDBAndSaveRedis(keyword, pageable)
-
-        return currentPage
     }
 
     fun getFromDBAndSaveRedis(
         keyword: String,
         pageable: Pageable
     ): Page<SearchResponse>{
+        //DB에서 검색 결과를 가져온다.
         val page = movieInfoRepository.searchByKeyword(keyword, pageable)
 
-        redisService.savePageToHash(keyword, page)
+        //검색 결과가 있을 때만 Cache 저장
+        if(page.content.isNotEmpty())
+            redisService.savePageToHash(keyword, page)
+
         return page
     }
 

@@ -17,30 +17,34 @@ import java.time.Duration
 @EnableCaching
 @Configuration
 class CacheConfig {
-//    @Bean
-//    fun cacheManager(): CacheManager {
-//        val simpleCacheManager = SimpleCacheManager()
-//        simpleCacheManager.setCaches(
-//            listOf(
-//                ConcurrentMapCache("pageList")
-//            )
-//        )
-//        return simpleCacheManager
-//    }
 
+    /* ================== MovieInfoServiceImplV2에서 사용 =====================*/
     @Bean
-    fun cacheManager(
-        redisConnectionFactory: RedisConnectionFactory
-    ): RedisCacheManager {
-        val defaults: RedisCacheConfiguration = RedisCacheConfiguration
-            .defaultCacheConfig()
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .entryTtl(Duration.ofMinutes(30)) //캐시 유효기간을 30분으로 설정
-
-        return RedisCacheManager
-            .RedisCacheManagerBuilder
-            .fromConnectionFactory(redisConnectionFactory)
-            .cacheDefaults(defaults).build()
+    fun cacheManager(): CacheManager {
+        val simpleCacheManager = SimpleCacheManager()
+        simpleCacheManager.setCaches(
+            listOf(
+                ConcurrentMapCache("pageList")
+            )
+        )
+        return simpleCacheManager
     }
+
+    /* ================== 사용하지 않아도 되는 코드 =====================*/
+
+//    @Bean
+//    fun cacheManager(
+//        redisConnectionFactory: RedisConnectionFactory
+//    ): RedisCacheManager {
+//        val defaults: RedisCacheConfiguration = RedisCacheConfiguration
+//            .defaultCacheConfig()
+//            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
+//            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
+//            .entryTtl(Duration.ofMinutes(30)) //캐시 유효기간을 30분으로 설정
+//
+//        return RedisCacheManager
+//            .RedisCacheManagerBuilder
+//            .fromConnectionFactory(redisConnectionFactory)
+//            .cacheDefaults(defaults).build()
+//    }
 }
