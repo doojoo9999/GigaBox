@@ -25,17 +25,17 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable
-    ): List<SearchResponse> {
+    ): Page<SearchResponse> {
         val whereClause = BooleanBuilder()
         whereClause.and(movieInfo.title.contains(keyword))
 
-//        val totalCount = queryFactory
-//            .select(movieInfo.count())
-//            .from(movieInfo)
-//            .where(whereClause)
-//            .fetchOne() ?: 0L
+        val totalCount = queryFactory
+            .select(movieInfo.count())
+            .from(movieInfo)
+            .where(whereClause)
+            .fetchOne() ?: 0L
 
-        return queryFactory
+        val contents = queryFactory
             .select(
                 Projections.constructor(
                     SearchResponse::class.java,
@@ -50,7 +50,7 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
             .orderBy(*getOrderSpecifier(pageable, movieInfo))
             .fetch()
 
-//        return PageImpl(contents, pageable, totalCount)
+        return PageImpl(contents, pageable, totalCount)
 
     }
     private fun getOrderSpecifier(
@@ -90,31 +90,4 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
             .where(keywordEntity.word.`in`(*titles))
             .fetch()
     }
-
-//    override fun findByHashKey(
-//        hashTableKeys: Set<String>
-//    ): List<SearchResponse> {
-//        val whereClause = BooleanBuilder()
-//        for (key in hashTableKeys){
-//            whereClause.or(movieInfo.title.contains(key.split(":")[0]))
-//        }
-//
-////        for(key in hashTableKeys){
-////            BooleanBuilder().or(
-////                movieInfo.title.contains(key.split(":")[0])
-////            ).let { whereClause.and(it) }
-////        }
-//
-//        return queryFactory
-//            .select(
-//                Projections.constructor(
-//                    SearchResponse::class.java,
-//                    movieInfo.id,
-//                    movieInfo.title
-//                )
-//            )
-//            .from(movieInfo)
-//            .where(whereClause)
-//            .fetch()
-//    }
 }

@@ -50,7 +50,7 @@ class MovieInfoController(
             size = 10,
             sort = ["title"]
         ) pageable: Pageable
-    ): ResponseEntity<List<SearchResponse>> {
+    ): ResponseEntity<Page<SearchResponse>> {
         val myPage = movieInfoService.searchByKeyword(keyword, pageable)
         movieInfoService.getKeywordEntity(keyword)
         return ResponseEntity

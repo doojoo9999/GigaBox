@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
@@ -16,8 +17,8 @@ class RedisService(
     private val redisTemplate: RedisTemplate<String, String>
 ) {
     private val movieInfoHashTableName = "MovieInfoSearchCache"
-    private val movieInfoHashTableTime = 5L
-    private val movieInfoTimeUnit = TimeUnit.MINUTES
+    private val movieInfoHashTableTime = 1L
+    private val movieInfoTimeUnit = TimeUnit.HOURS
     private val tmpKey = "tmpKey"
     private val tmpValue = "tmpValue"
 
@@ -61,51 +62,63 @@ class RedisService(
 
     fun getPageFromHash(
         key: String
-    ): List<SearchResponse>? {
+    ): Page<SearchResponse>? {
         return hashOperations.get(movieInfoHashTableName, key)
-//            ?.let { jsonToPage(it) }
-            ?.let { jsonToContent(it) }
+            ?.let { jsonToPage(it) }
+//            ?.let { jsonToContent(it) }
     }
 
     fun savePageToHash(
         keyword: String,
-        currentPage:List<SearchResponse>,
-        pageable: Pageable
+        currentPage:Page<SearchResponse>
     ){
         hashTableInit()
         hashOperations.put(
             movieInfoHashTableName,
-            makeKey(keyword, pageable.pageNumber),
-            contentToJson(currentPage)
+            makeKey(keyword, currentPage.number),
+            pageToJson(currentPage)
         )
     }
 
-    private fun contentToJson(
-        currentPage:List<SearchResponse>
-    ): String{
-        return objectMapper.writeValueAsString(currentPage)
-    }
-
-    private fun jsonToContent(
-        jsonString: String
-    ): MutableList<SearchResponse>{
-        return objectMapper.readValue(jsonString)
-    }
-
-//    private fun pageToJson(
-//        currentPage:Page<SearchResponse>
-//    ): String{
-//        return objectMapper.writeValueAsString(
-//            CustomPageImpl(currentPage)
+//    fun saveContentToHash(
+//        keyword: String,
+//        currentPage:List<SearchResponse>,
+//        pageable: Pageable
+//    ){
+//        hashTableInit()
+//        hashOperations.put(
+//            movieInfoHashTableName,
+//            makeKey(keyword, pageable.pageNumber),
+//            contentToJson(currentPage)
 //        )
 //    }
 //
-//    private fun jsonToPage(
-//        jsonString: String
-//    ): Page<SearchResponse>?{
-//        val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
-//        return page
+//    private fun contentToJson(
+//        currentPage:List<SearchResponse>
+//    ): String{
+//        return objectMapper.writeValueAsString(currentPage)
 //    }
+//
+//    private fun jsonToContent(
+//        jsonString: String
+//    ): MutableList<SearchResponse>{
+//        return objectMapper.readValue(jsonString)
+//    }
+
+    private fun pageToJson(
+        currentPage:Page<SearchResponse>
+    ): String{
+        return objectMapper.writeValueAsString(
+            CustomPageImpl(currentPage)
+        )
+    }
+
+    private fun jsonToPage(
+        jsonString: String
+    ): Page<SearchResponse>{
+        val page: CustomPageImpl<SearchResponse> = objectMapper.readValue(jsonString)
+        return page
+    }
 
     fun makeKey(
         keyword: String,
@@ -117,34 +130,4 @@ class RedisService(
             append(pageNumber)
         }.toString()
     }
-
-    //키를 전부 반환
-//    fun getMovieHashTableKey(): Set<String>{
-//        return hashOperations.keys(movieInfoHashTableName)
-//    }
-
-//    fun updateAllMovieHashTable(
-//        hashTableKeys: Set<String>,
-//        searchList: List<SearchResponse>
-//    ){
-//        hashOperations.putAll(
-//            movieInfoHashTableName,
-//        )
-//    }
-//
-//    fun makeMap(
-//        hashTableKeys: Set<String>,
-//        searchList: List<SearchResponse>
-//    ): MutableMap<String, String>{
-//        val map: MutableMap<String, String> = mutableMapOf()
-//
-//        val hashTableIterator = hashTableKeys.iterator()
-//        val searchListIterator = searchList.listIterator()
-//
-////        while (hashTableIterator.hasNext() && searchListIterator.hasNext()){
-////            map[hashTableIterator.next()] = searchListIterator.next()
-////        }
-//
-//        return map
-//    }
 }

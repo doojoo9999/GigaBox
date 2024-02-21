@@ -7,11 +7,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CustomRepository {
-    fun searchByKeyword(keyword: String, pageable: Pageable): List<SearchResponse>
+    fun searchByKeyword(keyword: String, pageable: Pageable): Page<SearchResponse>
 
     fun getTopSearched(): List<TopSearchResponse>
 
     fun findByTitles(titles: Array<String>): List<KeywordEntity>
-
-//    fun findByHashKey(hashTableKeys: Set<String>): List<SearchResponse>
 }

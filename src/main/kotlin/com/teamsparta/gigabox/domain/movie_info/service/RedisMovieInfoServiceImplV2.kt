@@ -1,6 +1,5 @@
 package com.teamsparta.gigabox.domain.movie_info.service
 
-import com.teamsparta.gigabox.domain.exception.ModelNotFoundException
 import com.teamsparta.gigabox.domain.movie_info.dto.request.CreateMovieInfoRequest
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
@@ -8,8 +7,8 @@ import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
 import com.teamsparta.gigabox.infra.aop.StopWatch
 import com.teamsparta.gigabox.infra.cache.RedisService
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service("RedisMovieInfoServiceV2")
@@ -25,7 +24,7 @@ class RedisMovieInfoServiceImplV2(
     override fun searchByKeyword(
         keyword: String,
         pageable: Pageable
-    ): List<SearchResponse> {
+    ): Page<SearchResponse> {
         val key = redisService.makeKey(keyword, pageable.pageNumber)
 
         //redis에서 가져오고, 없으면 DB에서 가져온 후, redis에 저장한다.
@@ -36,13 +35,13 @@ class RedisMovieInfoServiceImplV2(
     fun getFromDBAndSaveRedis(
         keyword: String,
         pageable: Pageable
-    ): List<SearchResponse>{
+    ): Page<SearchResponse> {
         //DB에서 검색 결과를 가져온다.
-        val pageList = movieInfoRepository.searchByKeyword(keyword, pageable)
+        val page = movieInfoRepository.searchByKeyword(keyword, pageable)
 
         //검색 결과가 있을 때만 Cache 저장
-        if(pageList.isNotEmpty())
-            redisService.savePageToHash(keyword, pageList, pageable)
+        if(page.content.isNotEmpty())
+            redisService.savePageToHash(keyword, page)
 
         //DB에서 가져온 결과를 반환한다.
 //        return pageList
