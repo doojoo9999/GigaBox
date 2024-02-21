@@ -82,5 +82,3 @@ class CouponServiceTest {
 //        verify { commonCouponRepository.save(coupon) }
 //
 //    }
-
-}

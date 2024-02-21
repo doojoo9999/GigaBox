@@ -9,7 +9,8 @@ import java.sql.Timestamp
 
 @Repository
 class JCouponRepositoryImpl (
-    private val jdbcTemplate : JdbcTemplate
+    private val jdbcTemplate : JdbcTemplate,
+
 ) : JCouponRepository {
     override fun insertCoupons(
         coupons: List<CouponEntity>

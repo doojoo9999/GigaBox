@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface CommonCouponRepository : JpaRepository <CommonCouponEntity, Long> {
+interface CommonCouponRepository : JpaRepository <CommonCouponEntity, Long>, CustomCouponRepository {
     fun findByCouponNumber(couponNumber : String) : CommonCouponEntity?
 
     @Modifying

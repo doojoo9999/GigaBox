@@ -31,16 +31,18 @@ class CouponServiceImpl(
 
         val coupons = mutableListOf<CouponEntity>()
 
-        for (i in 0 .. request.couponCount) {
-            coupons.add(CouponEntity(
-                content = request.content,
-                couponNumber = couponUtility.createCouponNumber(),
-                couponExp = request.couponExp,
-                couponCount = request.couponCount,
-                issuedBy = issuedBy, // 쿠폰 발급한 사람 나중에 security 적용되면 토큰 접속 정보 넣을 것
-                memberId = issuedBy, // 여기엔 쿠폰 사용한 사람이나 발급받은 사람 정보가 들어갈 거임
-                available = true
-            ))
+        for (i in 0..request.couponCount) {
+            coupons.add(
+                CouponEntity(
+                    content = request.content,
+                    couponNumber = couponUtility.createCouponNumber(),
+                    couponExp = request.couponExp,
+                    couponCount = request.couponCount,
+                    issuedBy = issuedBy, // 쿠폰 발급한 사람 나중에 security 적용되면 토큰 접속 정보 넣을 것
+                    memberId = issuedBy, // 여기엔 쿠폰 사용한 사람이나 발급받은 사람 정보가 들어갈 거임
+                    available = true
+                )
+            )
         }
 
         couponRepository.insertCoupons(coupons)
@@ -48,7 +50,7 @@ class CouponServiceImpl(
 //        couponRepository.saveAll(coupons)
     }
 
-    override fun getCoupon( request: GetCouponRequest) : GetCouponResponse {
+    override fun getCoupon(request: GetCouponRequest): GetCouponResponse {
         val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
             ?: throw IllegalArgumentException("Invalid Member")
 
@@ -56,7 +58,7 @@ class CouponServiceImpl(
             ?: throw IllegalArgumentException("Invalid Coupon")
 
 
-        if(couponCheck.couponNumber == request.couponNumber && couponCheck.available) {
+        if (couponCheck.couponNumber == request.couponNumber && couponCheck.available) {
 
             couponCheck.available = false
             couponCheck.memberId = userCheck
@@ -88,25 +90,42 @@ class CouponServiceImpl(
     }
 
     @Transactional
-    override fun getCommonCoupon(request : GetCouponRequest) : GetCouponResponse {
-        val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
-            ?: throw IllegalArgumentException("Invalid Member")
+    override fun getCommonCoupon(request: GetCouponRequest) {
 
-        val couponCheck = commonCouponRepository.findByCouponNumber(request.couponNumber)?.apply {
+        val commonCoupon = commonCouponRepository.findByCouponNumberWithMember(request.couponNumber, 2L)
+
+        commonCoupon.apply {
             if (available && couponCount > useCount) {
-                memberId = userCheck
-//                useCount += 1
-                commonCouponRepository.incUseCount(request.couponNumber) // useCount 증가를 db에서 직접 증가시킴
-                // 근데 이렇게 하면 오히려 300+ 개수만큼이 발급되지 않을까
+                commonCouponRepository.incUseCount(request.couponNumber)
             } else {
-                throw IllegalArgumentException("사용할 수 없는 쿠폰입니다.")
+                throw IllegalArgumentException("사용할 수 없는 쿠폰입니다")
             }
-        } ?: throw IllegalArgumentException("쿠폰 번호가 틀렸습니다.")
+        }
 
-        commonCouponRepository.save(couponCheck)
+        commonCouponRepository.save(commonCoupon)
 
-        return GetCouponResponse(couponNumber = couponCheck.couponNumber)
 
+//      ----------------------------------------------------------------------------------------------
+//        val userCheck = memberRepository.findByIdOrNull(/*userPrincipal.id*/ 2L)
+//            ?: throw IllegalArgumentException("Invalid Member")
+//
+//        val couponCheck = commonCouponRepository.findByCouponNumber(request.couponNumber)?.apply {
+//
+//            if (available && couponCount > useCount) {
+//                memberId = userCheck
+////                useCount += 1
+//                commonCouponRepository.incUseCount(request.couponNumber) // useCount 증가를 db에서 직접 증가시킴
+//                // 근데 이렇게 하면 오히려 300+ 개수만큼이 발급되지 않을까
+//            } else {
+//                throw IllegalArgumentException("사용할 수 없는 쿠폰입니다.")
+//            }
+//        } ?: throw IllegalArgumentException("쿠폰 번호가 틀렸습니다.")
+//
+//        commonCouponRepository.save(couponCheck)
+//
+//        return GetCouponResponse(couponNumber = couponCheck.couponNumber)
+
+//        --------------------------------------------------------------------------------------------
         //        if (couponCheck.available && couponCheck.couponCount >= couponCheck.useCount) {
 //
 //        }
@@ -114,6 +133,6 @@ class CouponServiceImpl(
 //        couponCheck.memberId = userCheck
 //        couponCheck.useCount += 1
 
-    }
 
+    }
 }

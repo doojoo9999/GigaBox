@@ -62,13 +62,15 @@ class CouponController (
     }
 
     @Operation(summary = "공통 쿠폰 사용", description = "쿠폰 번호 입력이 필요합니다.")
-    @PutMapping("/common-coupon")
+    @PostMapping("/common-coupon/apply")
     fun getCommonCoupon(
         @RequestBody request : GetCouponRequest
-    ) : ResponseEntity<GetCouponResponse> {
+    ) : ResponseEntity<Unit> {
+
+        couponService.getCommonCoupon(request)
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(couponService.getCommonCoupon(request))
+            .build()
     }
 }
