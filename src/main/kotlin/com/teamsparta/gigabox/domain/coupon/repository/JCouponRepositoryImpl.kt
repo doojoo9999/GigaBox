@@ -17,6 +17,7 @@ class JCouponRepositoryImpl (
         val sql =
             "INSERT INTO coupon(available, content, coupon_count, coupon_exp, coupon_number, created_at, issued_by, member_id, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
+
         jdbcTemplate.batchUpdate(sql, object : BatchPreparedStatementSetter {
             override fun setValues(ps: PreparedStatement, i: Int) {
                 ps.setBoolean(1, coupons[i].available)
