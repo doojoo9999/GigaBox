@@ -53,7 +53,6 @@ logging:
         jdbc:
           core:
             JdbcTemplate: debug
-    root: debug
 
 
 

@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param
 interface CommonCouponRepository : JpaRepository <CommonCouponEntity, Long>, CustomCouponRepository {
     fun findByCouponNumber(couponNumber : String) : CommonCouponEntity?
 
+    fun findAllByAvailable(available : Boolean) : List<CommonCouponEntity?>
+
     @Modifying
     @Query("update CommonCouponEntity c set c.useCount = c.useCount + 1 where c.couponNumber = :couponNumber")
     fun incUseCount(@Param("couponNumber") couponNumber : String) : Int

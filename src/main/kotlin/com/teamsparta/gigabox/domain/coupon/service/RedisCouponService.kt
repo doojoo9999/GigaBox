@@ -1,7 +1,10 @@
 package com.teamsparta.gigabox.domain.coupon.service
 
+import com.teamsparta.gigabox.domain.coupon.dto.request.GetCouponRequest
+
 interface RedisCouponService {
 
-    fun syncCoupons()
+    fun getCommonCoupon(request: GetCouponRequest)
+
 
 }

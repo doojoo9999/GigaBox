@@ -1,5 +1,8 @@
 package com.teamsparta.gigabox.infra.cache
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,25 +18,32 @@ class RedisConfig(
     @Value("\${spring.data.redis.port}") val port: Int,
 ) {
     @Bean
-    fun redisConnectionFactory(): RedisConnectionFactory{
+    fun redisConnectionFactory(): LettuceConnectionFactory{
         return LettuceConnectionFactory(host, port)
     }
 
     @Bean
     fun redisTemplate(
         redisConnectionFactory: RedisConnectionFactory
-    ): RedisTemplate<String, String>{
-        val template = RedisTemplate<String, String>()
+    ): RedisTemplate<String, Any>{
+
+        val objectMapper = ObjectMapper().apply {
+            registerModule(JavaTimeModule())
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        }
+
+        val template = RedisTemplate<String, Any>()
         template.connectionFactory = redisConnectionFactory
 
         //String 자료구조를 위한 Serializer
         template.keySerializer = StringRedisSerializer()
-        template.valueSerializer = StringRedisSerializer()
+        template.valueSerializer = GenericJackson2JsonRedisSerializer(objectMapper)
 
         //Hash 자료구조를 위한 Serializer
         template.hashKeySerializer = StringRedisSerializer()
-        template.hashValueSerializer = StringRedisSerializer()
+        template.hashValueSerializer = GenericJackson2JsonRedisSerializer(objectMapper)
 
         return template
     }
+
 }

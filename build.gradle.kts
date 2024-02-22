@@ -90,6 +90,9 @@ dependencies {
     testImplementation("com.fasterxml.jackson.core:jackson-databind")
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    //jackson-datatype
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 }
 
 tasks.withType<KotlinCompile> {
