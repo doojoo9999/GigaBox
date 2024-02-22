@@ -5,7 +5,7 @@ import com.teamsparta.gigabox.infra.security.UserPrincipal
 
 interface RedisCouponService {
 
-    fun getCommonCoupon(request: GetCouponRequest, userPrincipal : UserPrincipal)
+    fun getCommonCoupon(request: GetCouponRequest)
 
 
 }

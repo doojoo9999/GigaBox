@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class RedisCouponServiceImpl(
     private val redisCouponRepository: RedisCouponRepository
 ) : RedisCouponService {
-    override fun getCommonCoupon(request: GetCouponRequest, userPrincipal: UserPrincipal) {
+    override fun getCommonCoupon(request: GetCouponRequest) {
 
         val couponCount = redisCouponRepository.getCouponCount(request.couponNumber)
         val useCount = redisCouponRepository.getUseCount(request.couponNumber)

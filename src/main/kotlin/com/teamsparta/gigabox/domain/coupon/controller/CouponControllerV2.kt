@@ -23,11 +23,10 @@ class CouponControllerV2 (
     @Operation(summary = "공통 쿠폰 사용", description = "쿠폰 번호 입력이 필요합니다.")
     @PostMapping("/common-coupon/apply")
     fun getCommonCoupon(
-        @RequestBody request : GetCouponRequest,
-        @AuthenticationPrincipal userPrincipal: UserPrincipal
+        @RequestBody request : GetCouponRequest
     ) : ResponseEntity<Unit> {
 
-        redisCouponService.getCommonCoupon(request, userPrincipal)
+        redisCouponService.getCommonCoupon(request)
 
         return ResponseEntity
             .status(HttpStatus.OK)
