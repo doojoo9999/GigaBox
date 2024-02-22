@@ -26,6 +26,11 @@ class CommonCouponEntity (
     @Column(name = "available")
     val available : Boolean,
 
+//    @ElementCollection
+//    @CollectionTable(name = "used_members", joinColumns = [JoinColumn(name = "id")])
+//    @Column(name = "member_id_list")
+//    var usedMembers : List<Long>,
+
     @JoinColumn(name = "member_id")
     @ManyToOne
     var memberId : MemberEntity?,

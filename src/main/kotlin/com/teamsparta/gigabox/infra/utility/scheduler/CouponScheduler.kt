@@ -20,11 +20,16 @@ class CouponScheduler(
         //여기에 애플리케이션 시작할 때 뭐 할 건지 저장함
 
         val couponList = commonCouponRepository.findAllByAvailable(true)
+
+        if(couponList.isEmpty()) {
+            return
+        }
+
         val hashOps = redisTemplate.opsForHash<String, Any>()
         couponList.forEach {
             redisCouponRepository.save(it!!)
             hashOps.put(it.couponNumber, "use_count", it.useCount)
-            hashOps.put(it.couponNumber, "member_id", it.memberId?.id ?: "")
+//            hashOps.put(it.couponNumber, "member_id", it.memberId?.id ?: "")
             hashOps.put(it.couponNumber, "coupon_count", it.couponCount)
         }
 
@@ -43,10 +48,15 @@ class CouponScheduler(
 
         // redis와 db를 동기화시킨다
         for (couponNumber in allAvailableCoupons) {
-            val couponInRedis = redisCouponRepository.findByCouponNumber(couponNumber.toString())
+            val useCountInRedis = redisCouponRepository.getUseCount(couponNumber.toString())
+//            val memberIdListInRedis = redisCouponRepository.getMemberIdList(couponNumber.toString())
 
-            if (couponInRedis != null) {
-                commonCouponRepository.save(couponInRedis)
+            val couponInDb = commonCouponRepository.findByCouponNumber(couponNumber.toString())
+
+            if (couponInDb != null) {
+                couponInDb.useCount = useCountInRedis.toInt() // Redis에서 가져온거로 업데이트
+//                couponInDb.usedMembers = memberIdListInRedis // Redis에서 가져온 리스트로 업데이트
+                commonCouponRepository.save(couponInDb)
             }
         }
 

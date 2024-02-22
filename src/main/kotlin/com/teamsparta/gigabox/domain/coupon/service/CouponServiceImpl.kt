@@ -83,7 +83,8 @@ class CouponServiceImpl(
             useCount = 0,
             memberId = null,
             issuedBy = issuedBy,
-            available = true
+            available = true,
+//            usedMembers = emptyList()
         )
 
         commonCouponRepository.save(commonCoupon)
@@ -96,7 +97,11 @@ class CouponServiceImpl(
 
         commonCoupon.apply {
             if (available && couponCount > useCount) {
-                commonCouponRepository.incUseCount(request.couponNumber)
+
+                commonCouponRepository.save(commonCoupon)
+
+
+//                commonCouponRepository.incUseCount(request.couponNumber)
             } else {
                 throw IllegalArgumentException("사용할 수 없는 쿠폰입니다")
             }

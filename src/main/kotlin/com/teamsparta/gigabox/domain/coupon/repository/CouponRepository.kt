@@ -7,5 +7,5 @@ interface CouponRepository : JpaRepository<CouponEntity, Long>, JCouponRepositor
 
     fun findByContent(content : String) : CouponEntity
 
-    fun findByCouponNumber(couponNumber : String) : CouponEntity
+    fun findByCouponNumber(couponNumber : String) : CouponEntity?
 }

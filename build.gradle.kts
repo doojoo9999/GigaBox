@@ -93,7 +93,6 @@ dependencies {
 
     //jackson-datatype
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-
 }
 
 tasks.withType<KotlinCompile> {
