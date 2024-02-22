@@ -22,7 +22,10 @@ import org.springframework.stereotype.Repository
 class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
     private val movieInfo = QMovieInfoEntity.movieInfoEntity
     private val keywordEntity = QKeywordEntity.keywordEntity
-    override fun searchByKeyword(keyword: String, pageable: Pageable): Page<SearchResponse> {
+    override fun searchByKeyword(
+        keyword: String,
+        pageable: Pageable
+    ): Page<SearchResponse> {
         val whereClause = BooleanBuilder()
         whereClause.and(movieInfo.title.contains(keyword))
 
@@ -48,8 +51,12 @@ class MovieInfoRepositoryImpl: CustomRepository, QueryDslSupport() {
             .fetch()
 
         return PageImpl(contents, pageable, totalCount)
+
     }
-    private fun getOrderSpecifier(pageable: Pageable, path: EntityPathBase<*>): Array<OrderSpecifier<*>>{
+    private fun getOrderSpecifier(
+        pageable: Pageable,
+        path: EntityPathBase<*>
+    ): Array<OrderSpecifier<*>>{
         val pathBuilder = PathBuilder(path.type, path.metadata)
 
         return pageable.sort.toList().map {

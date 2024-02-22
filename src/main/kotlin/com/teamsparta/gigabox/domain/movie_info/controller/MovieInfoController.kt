@@ -37,7 +37,7 @@ class MovieInfoController(
             .build()
     }
 
-    @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 영화를 검색한다.")
+    @Operation(summary = "영화 제목 검색 + Paging", description = "키워드를 입력하면 해당 키워드를 포함한 영화 목록을 출력하기")
     @GetMapping("/search")
     fun searchByKeyword(
         @Valid
@@ -52,13 +52,13 @@ class MovieInfoController(
         ) pageable: Pageable
     ): ResponseEntity<Page<SearchResponse>> {
         val myPage = movieInfoService.searchByKeyword(keyword, pageable)
-        movieInfoService.getKeywordEntity(keyword)
+//        movieInfoService.getKeywordEntity(keyword)
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(myPage)
     }
 
-    @Operation(summary = "인기 검색어 목록 조회", description = "가장 많이 검색한 영화 제목을 알려준다.")
+    @Operation(summary = "인기 검색어 목록 조회", description = "가장 많이 검색한 키워드를 알려준다.")
     @GetMapping("/top-search")
     fun getTopSearched(): ResponseEntity<List<TopSearchResponse>>{
         return ResponseEntity

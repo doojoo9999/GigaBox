@@ -27,6 +27,7 @@ class RedisMovieInfoServiceImplV2(
     ): Page<SearchResponse> {
         val key = redisService.makeKey(keyword, pageable.pageNumber)
 
+        //redis에서 가져오고, 없으면 DB에서 가져온 후, redis에 저장한다.
         return redisService.getPageFromHash(key)
             ?: getFromDBAndSaveRedis(keyword, pageable)
     }
@@ -34,7 +35,7 @@ class RedisMovieInfoServiceImplV2(
     fun getFromDBAndSaveRedis(
         keyword: String,
         pageable: Pageable
-    ): Page<SearchResponse>{
+    ): Page<SearchResponse> {
         //DB에서 검색 결과를 가져온다.
         val page = movieInfoRepository.searchByKeyword(keyword, pageable)
 
@@ -42,7 +43,14 @@ class RedisMovieInfoServiceImplV2(
         if(page.content.isNotEmpty())
             redisService.savePageToHash(keyword, page)
 
-        return page
+        //DB에서 가져온 결과를 반환한다.
+//        return pageList
+
+        val key = redisService.makeKey(keyword, pageable.pageNumber)
+
+        //redis에 저장한 결과를 가져온다.
+        return redisService.getPageFromHash(key)
+            ?: throw IllegalStateException("redis에서 오류가 생겼어용")
     }
 
     override fun getTopSearched(): List<TopSearchResponse> {
