@@ -20,11 +20,14 @@ class CouponScheduler(
         //여기에 애플리케이션 시작할 때 뭐 할 건지 저장함
 
         val couponList = commonCouponRepository.findAllByAvailable(true)
+        val hashOps = redisTemplate.opsForHash<String, Any>()
         couponList.forEach {
             redisCouponRepository.save(it!!)
-            redisTemplate.opsForValue().set("${it.couponNumber}.useCount", it.useCount)
-            redisTemplate.opsForValue().set("${it.couponNumber}.memberId", {it.memberId})
+            hashOps.put(it.couponNumber, "useCount", it.useCount)
+            hashOps.put(it.couponNumber, "memberId", it.memberId?.id ?: "")
         }
+
+
         }
 
     fun getAllAvailableCouponNumbers() : List<CommonCouponEntity?> {

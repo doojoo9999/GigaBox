@@ -9,9 +9,10 @@ class RedisCouponServiceImpl(
     private val redisCouponRepository: RedisCouponRepository
 ) : RedisCouponService {
     override fun getCommonCoupon(request: GetCouponRequest) {
-        val commonCoupon = redisCouponRepository.findByCouponNameOnRedis(request.couponNumber)
+        val commonCoupon = redisCouponRepository.findByUseCountOnRedis(request.couponNumber)
 
-        println(commonCoupon)
+
+
 
 
 //        commonCoupon?.apply {

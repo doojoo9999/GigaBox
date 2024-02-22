@@ -31,7 +31,7 @@ class RedisService(
     private fun setObjectMapper(): ObjectMapper {
         return ObjectMapper()
             .registerKotlinModule()
-            .registerModule(JavaTimeModule())
+//            .registerModule(JavaTimeModule())
             .activateDefaultTyping(
                 BasicPolymorphicTypeValidator.builder()
                     .allowIfBaseType(Any::class.java).build(),
