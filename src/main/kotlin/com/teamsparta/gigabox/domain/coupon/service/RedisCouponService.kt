@@ -4,7 +4,7 @@ import com.teamsparta.gigabox.domain.coupon.dto.request.GetCouponRequest
 
 interface RedisCouponService {
 
-    fun getCommonCoupon(request: GetCouponRequest)
+    fun getCommonCoupon(request: GetCouponRequest, userPrincipal : UserPrincipal)
 
 
 }

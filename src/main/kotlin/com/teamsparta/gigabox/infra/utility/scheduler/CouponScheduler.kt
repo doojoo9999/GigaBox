@@ -23,8 +23,9 @@ class CouponScheduler(
         val hashOps = redisTemplate.opsForHash<String, Any>()
         couponList.forEach {
             redisCouponRepository.save(it!!)
-            hashOps.put(it.couponNumber, "useCount", it.useCount)
-            hashOps.put(it.couponNumber, "memberId", it.memberId?.id ?: "")
+            hashOps.put(it.couponNumber, "use_count", it.useCount)
+            hashOps.put(it.couponNumber, "member_id", it.memberId?.id ?: "")
+            hashOps.put(it.couponNumber, "coupon_count", it.couponCount)
         }
 
 

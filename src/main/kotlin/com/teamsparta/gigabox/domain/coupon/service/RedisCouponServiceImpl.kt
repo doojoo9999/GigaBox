@@ -8,8 +8,17 @@ import org.springframework.stereotype.Service
 class RedisCouponServiceImpl(
     private val redisCouponRepository: RedisCouponRepository
 ) : RedisCouponService {
-    override fun getCommonCoupon(request: GetCouponRequest) {
-        val commonCoupon = redisCouponRepository.findByUseCountOnRedis(request.couponNumber)
+    override fun getCommonCoupon(request: GetCouponRequest, ) {
+
+        val couponCount = redisCouponRepository.getCouponCount(request.couponNumber)
+        val useCount = redisCouponRepository.getUseCount(request.couponNumber)
+
+        if (couponCount > useCount) {
+            redisCouponRepository.incrementUseCount(request.couponNumber)
+            redisCouponRepository.addMemberId(request.couponNumber, memberId)
+        } else {
+            throw IllegalStateException("사용할 수 없는 쿠폰입니다.")
+        }
 
 
 

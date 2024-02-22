@@ -8,32 +8,35 @@ import org.springframework.stereotype.Repository
 class RedisCouponRepository(
     private val redisTemplate: RedisTemplate<String, Any>) {
 
-    fun findByCouponNumber(couponNumber : String) : CommonCouponEntity? {
-        return redisTemplate.opsForValue().get(couponNumber) as CommonCouponEntity
-    }
-
-    fun findByCouponNumberOnRedis(couponNumber : String) : Any? {
-        return redisTemplate.opsForValue().get(couponNumber)
-    }
-
-    fun findByUseCountOnRedis(couponNumber : String) : Any? {
-        return redisTemplate.opsForValue().get("{$couponNumber.useCount}")
-    }
-
-    fun incUseCountOnRedis(couponNumber : String) {
-        redisTemplate.opsForSet().add("{$couponNumber.useCount}", 1)
-    }
-
+    private val hashOps = redisTemplate.opsForHash<String, Any>()
 
     fun save(coupon: CommonCouponEntity) {
         val hashOps = redisTemplate.opsForHash<String, Any>()
-        hashOps.put(coupon.couponNumber, "useCount", coupon.useCount.toLong())
-        hashOps.put(coupon.couponNumber, "memberId", coupon.memberId?.id?:"")
-
+        hashOps.put(coupon.couponNumber, "use_count", coupon.useCount.toLong())
+        hashOps.put(coupon.couponNumber, "member_id", coupon.memberId?.id?:"")
+        hashOps.put(coupon.couponNumber, "coupon_count", coupon.couponCount)
     }
 
-    fun useCountSave(couponNumber : String ,useCount : Int) {
-        redisTemplate.opsForValue().increment(couponNumber, useCount.toLong())
+    fun getCouponCount(couponNumber: String): Long {
+        return hashOps.get(couponNumber, "coupon_count") as Long
+    }
+
+    fun getUseCount(couponNumber: String): Long {
+        return hashOps.get(couponNumber, "use_count") as Long
+    }
+
+    fun incrementUseCount(couponNumber: String) {
+        hashOps.increment(couponNumber, "use_count", 1L)
+    }
+
+    fun getMemberIdList(couponNumber: String): MutableList<Long> {
+        return hashOps.get(couponNumber, "member_id") as MutableList<Long>
+    }
+
+    fun addMemberId(couponNumber: String, memberId: Long) {
+        val memberIdList = getMemberIdList(couponNumber)
+        memberIdList.add(memberId)
+        hashOps.put(couponNumber, "member_id", memberIdList)
     }
 
 }
