@@ -21,11 +21,14 @@ class CommonCouponEntity (
     val couponCount : Int,
 
     @Column(name = "use_count")
-    val useCount : Int,
+    var useCount : Int,
+
+    @Column(name = "available")
+    val available : Boolean,
 
     @JoinColumn(name = "member_id")
     @ManyToOne
-    val memberId : MemberEntity?,
+    var memberId : MemberEntity?,
 
     @JoinColumn(name = "issued_by")
     @ManyToOne

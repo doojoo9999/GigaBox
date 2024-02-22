@@ -6,6 +6,7 @@ import com.teamsparta.gigabox.domain.movie_info.dto.response.TopSearchResponse
 import com.teamsparta.gigabox.domain.movie_info.model.KeywordEntity
 import com.teamsparta.gigabox.domain.movie_info.repository.KeywordRepository
 import com.teamsparta.gigabox.domain.movie_info.repository.MovieInfoRepository
+import org.hibernate.annotations.Cache
 import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -15,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service("MovieInfoServiceV2")
 class MovieInfoServiceImplV2(
-    private val movieInfoRepository: MovieInfoRepository,
-    private val keywordRepository: KeywordRepository
+    private val movieInfoRepository: MovieInfoRepository
 ): MovieInfoService {
     override fun createMovieInfo(
         request: CreateMovieInfoRequest
