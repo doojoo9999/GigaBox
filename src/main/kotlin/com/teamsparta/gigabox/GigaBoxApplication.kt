@@ -7,7 +7,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.scheduling.annotation.EnableScheduling
 
-@EnableScheduling //Scheduling 적용하기 위해서 사용
 @EnableAspectJAutoProxy // AOP 적용하기 위해서 사용
 @SpringBootApplication
 @EnableJpaAuditing

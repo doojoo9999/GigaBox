@@ -47,6 +47,7 @@ logging:
         jdbc:
           core:
             JdbcTemplate: debug
+    root: debug
 
 server:
   port: 8080

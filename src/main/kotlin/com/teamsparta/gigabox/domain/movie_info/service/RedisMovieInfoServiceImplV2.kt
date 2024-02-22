@@ -53,13 +53,6 @@ class RedisMovieInfoServiceImplV2(
             ?: throw IllegalStateException("redis에서 오류가 생겼어용")
     }
 
-//    @Scheduled(fixedDelay = 10000)
-//    fun updateRedis(){
-//        if(redisService.checkHashTableHasKey()) {
-//            val hashTableKeys = redisService.getMovieHashTableKey()
-//        }
-//    }
-
     override fun getTopSearched(): List<TopSearchResponse> {
         TODO("Not yet implemented")
     }

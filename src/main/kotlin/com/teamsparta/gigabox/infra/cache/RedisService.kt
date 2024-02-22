@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.teamsparta.gigabox.domain.movie_info.dto.response.SearchResponse
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
@@ -17,12 +16,16 @@ class RedisService(
     private val redisTemplate: RedisTemplate<String, String>
 ) {
     private val movieInfoHashTableName = "MovieInfoSearchCache"
-    private val movieInfoHashTableTime = 1L
+    private val movieInfoHashTableTimeOut = 1L
     private val movieInfoTimeUnit = TimeUnit.HOURS
     private val tmpKey = "tmpKey"
     private val tmpValue = "tmpValue"
 
+    private val topSearchedZSetName = "Recently-Viewed-Posts"
+    private val topSearchedZSetTimeOut = 1L //1일
+
     private var hashOperations = redisTemplate.opsForHash<String, String>()
+    private val zSetOperations = redisTemplate.opsForZSet()
     private val objectMapper = setObjectMapper()
 
     private fun setObjectMapper(): ObjectMapper {
@@ -55,7 +58,7 @@ class RedisService(
     private fun setHashTableExpire(){
         redisTemplate.expire(
             movieInfoHashTableName,
-            movieInfoHashTableTime,
+            movieInfoHashTableTimeOut,
             movieInfoTimeUnit
         )
     }
@@ -129,5 +132,10 @@ class RedisService(
             append(":")
             append(pageNumber)
         }.toString()
+    }
+
+    //
+    fun saveKeywordEntityToZSet(){
+
     }
 }
