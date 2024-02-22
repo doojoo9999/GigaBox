@@ -36,7 +36,8 @@
 
 
 ## ERD
-![GIGABOX](https://github.com/doojoo9999/GigaBox/assets/57141923/5e2fa626-7d78-46b4-bb13-5de49d7fb378)
+![GigaBox](https://github.com/doojoo9999/GigaBox/assets/57141923/c225ca1f-79da-4db6-a9ef-b6452c207c5a)
+
 
 
 ## 패키지 구조
