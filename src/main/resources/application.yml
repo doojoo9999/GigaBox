@@ -18,6 +18,26 @@ spring:
     properties:
       hibernate:
         show_sql: true
+        format_sql: false
+        highlight_sql: true
+  main:
+    allow-bean-definition-overriding: true
+
+auth:
+  jwt:
+    issuer: gigabox.teamsparta.com
+    secret: ${jwt.secret}
+    accessTokenExpirationHour: 168
+
+oauth2:
+  kakao:
+    client_id: ${oauth2.client_id}
+    redirect_url: ${oauth2.redirect_url}
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
         format_sql: true
         highlight_sql: true
   security:
