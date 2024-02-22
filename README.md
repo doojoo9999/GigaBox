@@ -32,17 +32,137 @@
 
 
 ## API 명세서
-
+[API 명세서](https://www.notion.so/478a7c378abb4eff8d56b7de5e682482?v=5193f9bb9b34445a836ec9e43469f2c3)
 
 
 ## ERD
-![GIGABOX](https://github.com/doojoo9999/GigaBox/assets/57141923/5e2fa626-7d78-46b4-bb13-5de49d7fb378)
+![GIGABOX (1)](https://github.com/doojoo9999/GigaBox/assets/57141923/57ba3332-3207-46e4-8c8c-184d481e375f)
 
 
 ## 패키지 구조
 
 ```
-
+├─main
+│  ├─kotlin
+│  │  └─com
+│  │      └─teamsparta
+│  │          └─gigabox
+│  │              ├─client
+│  │              │  ├─config
+│  │              │  └─oauth2
+│  │              │      └─kakao
+│  │              │          └─dto
+│  │              ├─domain
+│  │              │  ├─coupon
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─exception
+│  │              │  │  └─dto
+│  │              │  ├─member
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─movie_info
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─post
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─receipt
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─reservation
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─screen_info
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─theater
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  ├─theater_info
+│  │              │  │  ├─controller
+│  │              │  │  ├─dto
+│  │              │  │  │  ├─request
+│  │              │  │  │  └─response
+│  │              │  │  ├─model
+│  │              │  │  ├─repository
+│  │              │  │  └─service
+│  │              │  └─upload
+│  │              │      ├─controller
+│  │              │      ├─dto
+│  │              │      │  └─request
+│  │              │      ├─model
+│  │              │      ├─repository
+│  │              │      └─service
+│  │              └─infra
+│  │                  ├─aop
+│  │                  ├─auditing
+│  │                  ├─aws
+│  │                  ├─cache
+│  │                  ├─querydsl
+│  │                  ├─security
+│  │                  │  └─jwt
+│  │                  ├─swagger
+│  │                  └─utility
+│  │                      ├─couponutility
+│  │                      ├─mailutility
+│  │                      └─scheduler
+│  └─resources
+└─test
+    ├─kotlin
+    │  └─com
+    │      └─teamsparta
+    │          └─gigabox
+    │              ├─domain
+    │              │  ├─coupon
+    │              │  │  └─service
+    │              │  └─movie_info
+    │              │      ├─controller
+    │              │      ├─repository
+    │              │      └─service
+    │              └─infra
+    │                  └─cache
+    └─resources
 ```
 
 ## 👨🏻‍💻 Built With
