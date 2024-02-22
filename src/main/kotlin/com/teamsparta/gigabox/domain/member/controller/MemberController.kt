@@ -1,7 +1,9 @@
 package com.teamsparta.gigabox.domain.member.controller
 
+import com.teamsparta.gigabox.domain.member.dto.request.LoginRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SendMailRequest
 import com.teamsparta.gigabox.domain.member.dto.request.SignUpRequest
+import com.teamsparta.gigabox.domain.member.dto.response.LoginResponse
 import com.teamsparta.gigabox.domain.member.service.MemberService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +14,15 @@ import org.springframework.web.bind.annotation.*
 class MemberController(
     private val memberService: MemberService
 ) {
+
+    @PostMapping("/login")
+    fun signIn(
+        @RequestBody loginRequest: LoginRequest
+    ): ResponseEntity<LoginResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(memberService.login(loginRequest))
+    }
 
     @PostMapping("/signup")
     fun singUp(
@@ -48,5 +59,6 @@ class MemberController(
             .status(HttpStatus.OK)
             .build()
     }
+
 
 }
