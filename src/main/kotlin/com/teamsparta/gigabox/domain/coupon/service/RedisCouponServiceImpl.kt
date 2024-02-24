@@ -15,7 +15,7 @@ class RedisCouponServiceImpl(
         val useCount = redisCouponRepository.getUseCount(request.couponNumber)
 
         if (couponCount > useCount) {
-            redisCouponRepository.incrementUseCount(request.couponNumber)
+            redisCouponRepository.incrementUseCount(request.couponNumber) // redis에서 바로 증가시킬거임 (동시성 문제 해결된거 아님)
 //            redisCouponRepository.addMemberId(request.couponNumber, userPrincipal.id)
         } else {
             throw IllegalStateException("사용할 수 없는 쿠폰입니다.")

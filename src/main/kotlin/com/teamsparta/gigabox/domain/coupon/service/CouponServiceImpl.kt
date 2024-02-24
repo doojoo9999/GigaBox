@@ -75,17 +75,7 @@ class CouponServiceImpl(
         val issuedBy = memberRepository.findByIdOrNull(/*userPrincipal.id*/1L)
             ?: throw IllegalArgumentException("Invalid Member")
 
-        val commonCoupon = CommonCouponEntity(
-            content = request.content,
-            couponNumber = request.couponNumber,
-            couponExp = request.couponExp,
-            couponCount = request.couponCount,
-            useCount = 0,
-            memberId = null,
-            issuedBy = issuedBy,
-            available = true,
-//            usedMembers = emptyList()
-        )
+        val commonCoupon = CommonCouponEntity.toEntity(request, issuedBy)
 
         commonCouponRepository.save(commonCoupon)
     }

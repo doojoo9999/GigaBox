@@ -1,5 +1,6 @@
 package com.teamsparta.gigabox.domain.coupon.model
 
+import com.teamsparta.gigabox.domain.coupon.dto.request.AddCommonCouponRequest
 import com.teamsparta.gigabox.domain.member.model.MemberEntity
 import com.teamsparta.gigabox.infra.auditing.BaseEntity
 import jakarta.persistence.*
@@ -45,4 +46,21 @@ class CommonCouponEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id : Long = 0L
+
+    companion object {
+        fun toEntity(request : AddCommonCouponRequest, issuedBy: MemberEntity) : CommonCouponEntity {
+
+            return CommonCouponEntity(
+                content = request.content,
+                couponNumber = request.couponNumber,
+                couponExp = request.couponExp,
+                couponCount = request.couponCount,
+                useCount = 0,
+                available = true,
+                memberId = null,
+                issuedBy = issuedBy
+            )
+
+        }
+    }
 }
