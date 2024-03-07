@@ -38,6 +38,38 @@
 ## ERD
 ![GIGABOX (1)](https://github.com/doojoo9999/GigaBox/assets/57141923/57ba3332-3207-46e4-8c8c-184d481e375f)
 
+## 📌프로젝트 요약
+
+### 👀 Redis 읽기
+- 기존 Supabase 사용 테스트 결과
+![image](https://github.com/doojoo9999/GigaBox/assets/96476393/411f7379-7eaf-4b61-a84c-61da9e74e026)
+
+
+- In-memory cache 사용 테스트 결과
+![image](https://github.com/doojoo9999/GigaBox/assets/96476393/e5e31367-b284-4f2b-976c-db58efcb47b0)
+
+
+- Redis 사용 테스트 결과
+![image](https://github.com/doojoo9999/GigaBox/assets/96476393/86584faf-ffa4-4331-968a-4ecb458a1736)
+
+
+> Supabase에서 Redis로 전환한 결과, 읽기 속도에서 성능 개선이 이루어졌습니다.
+> 
+> TPS 1.7 → 1459 / 85723% 성능 개선
+
+
+### ✏️ Redis 쓰기
+- 기존 Supabase 사용 테스트 결과
+![image](https://github.com/doojoo9999/GigaBox/assets/96476393/bad29847-5604-4cc7-92c9-e1154d780703)
+
+
+- Redis 사용 테스트 결과
+![image](https://github.com/doojoo9999/GigaBox/assets/96476393/7eeef2db-f493-467b-b5ec-40dec90859b4)
+
+
+> Supabase에서 Redis로 전환한 결과, 쓰기 속도에서도 성능 개선이 이루어졌습니다.
+> 
+> TPS 12.1 → 3567 / 29625% 성능 개선
 
 ## 패키지 구조
 
